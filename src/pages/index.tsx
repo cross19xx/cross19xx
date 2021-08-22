@@ -2,8 +2,10 @@ import React from 'react';
 import { NextPage } from 'next';
 import styled from '@emotion/styled';
 
+import AnimatedObject from '_/components/AnimatedObject';
 import { Column, Grid, PaddedGrid } from '_/components/GridSystem';
 import Logo from '_/components/Logo';
+import SplitText from '_/components/SplitText';
 
 const NETWORK = [
   { title: 'hello@nicolasdesle.be', link: 'mailto:hello@nicolasdesle.be' },
@@ -28,33 +30,51 @@ const HomePage: NextPage = () => {
   return (
     <Container>
       <Header>
-        <StyledLogo size="4rem" />
+        <AnimatedObject>
+          <StyledLogo size="4rem" />
+        </AnimatedObject>
       </Header>
 
       <Intro>
-        <Title>Hi there. I&apos;m Kenneth.</Title>
-        <Subtitle>I&apos;m a full stack mobile and web developer based in Accra, Ghana.</Subtitle>
+        <Title>
+          <AnimatedObject>
+            <SplitText>Hi there. I&apos;m Kenneth.</SplitText>
+          </AnimatedObject>
+        </Title>
+
+        <Subtitle>
+          <AnimatedObject delay={0.2}>
+            <SplitText>
+              I&apos;m a full stack mobile and web developer based in Accra, Ghana.
+            </SplitText>
+          </AnimatedObject>
+        </Subtitle>
       </Intro>
 
       <Main>
         <Section>
-          <SectionTitle>Skills &amp; Focus</SectionTitle>
-          <SectionList>
-            {SKILLS.map((skill) => (
-              <SectionRow key={skill}>{skill}</SectionRow>
-            ))}
-          </SectionList>
+          <AnimatedObject>
+            <SectionTitle>Skills &amp; Focus</SectionTitle>
+            <SectionList>
+              {SKILLS.map((skill) => (
+                <SectionRow key={skill}>{skill}</SectionRow>
+              ))}
+            </SectionList>
+          </AnimatedObject>
         </Section>
 
         <Section>
-          <SectionTitle>Network</SectionTitle>
-          <SectionList>
-            {NETWORK.map(({ title, link }) => (
-              <SectionRow key={link}>
-                <SectionLink href={link}>{title}</SectionLink>
-              </SectionRow>
-            ))}
-          </SectionList>
+          <AnimatedObject>
+            <SectionTitle>Network</SectionTitle>
+
+            <SectionList>
+              {NETWORK.map(({ title, link }) => (
+                <SectionRow key={link}>
+                  <SectionLink href={link}>{title}</SectionLink>
+                </SectionRow>
+              ))}
+            </SectionList>
+          </AnimatedObject>
         </Section>
       </Main>
     </Container>
@@ -87,7 +107,7 @@ const StyledLogo = styled(Logo)`
 `;
 
 const Intro = styled.div`
-  min-height: 27.5rem;
+  min-height: 25rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -103,6 +123,7 @@ const Title = styled.h1`
 
 const Subtitle = styled.p`
   font-size: 1.75rem;
+  line-height: 1.5;
   color: var(--text-secondary);
 `;
 
