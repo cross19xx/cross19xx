@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import styled from '@emotion/styled';
 import { gsap, Sine } from 'gsap';
 
 type Props = {
@@ -20,11 +21,15 @@ const AnimatedObject: React.FC<Props> = ({ children, className, delay }) => {
   }, [delay]);
 
   return (
-    <div className={className} ref={containerRef}>
+    <Container className={className} ref={containerRef}>
       {children}
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.span`
+  display: block;
+`;
 
 AnimatedObject.defaultProps = {
   delay: 0,
