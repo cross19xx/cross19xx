@@ -11,9 +11,9 @@ const NETWORK = [
   { title: 'hello@nicolasdesle.be', link: 'mailto:hello@nicolasdesle.be' },
   { title: 'GitHub', link: 'https://www.github.com/cross19xx' },
   { title: 'Linkedin', link: 'https://www.linkedin.com/in/kenneth-kwakye-gyamfi' },
-  { title: 'Facebook', link: 'Facebook' },
-  { title: 'Instagram', link: 'Instagram' },
-  { title: 'Twitter', link: 'Twitter' },
+  { title: 'Facebook', link: 'https://www.facebook.com/profile.php?id=100009436144652' },
+  { title: 'Instagram', link: 'https://www.instagram.com/kenneth_kwakyegyamfi' },
+  { title: 'Twitter', link: 'https://twitter.com/cross19xx' },
 ];
 
 const SKILLS = [
