@@ -18,6 +18,7 @@ const SplitText: React.FC<Props> = ({ children }) => {
 const Text = styled.span`
   position: relative;
   display: inline-block;
+  opacity: 0;
 `;
 
 export default SplitText;
