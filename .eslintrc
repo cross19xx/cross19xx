@@ -1,0 +1,17 @@
+{
+  "env": {
+    "browser": true
+  },
+  "extends": ["@callstack/eslint-config/react", "plugin:@next/next/recommended"],
+  "rules": {
+    "@next/next/link-passhref": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "no-redeclare": "warn",
+    "prettier/prettier": "warn"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
+}

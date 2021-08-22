@@ -1,0 +1,57 @@
+{
+  "name": "cross19xx",
+  "version": "3.0.0",
+  "description": "Personal website for Kenneth Kwakye-Gyamfi",
+  "license": "MIT",
+  "private": false,
+  "author": {
+    "name": "Kenneth Kwakye-Gyamfi",
+    "email": "kenneth.cross95@gmail.com",
+    "url": "https://www.kwakye-gyamfi.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/cross19xx/cross19xx.git"
+  },
+  "dependencies": {
+    "@emotion/babel-preset-css-prop": "^11.2.0",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "next": "^11.1.0",
+    "next-seo": "^4.26.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@callstack/eslint-config": "^11.0.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "@next/eslint-plugin-next": "^11.1.0",
+    "@types/nprogress": "^0.2.0",
+    "@types/react": "^17.0.19",
+    "@types/react-dom": "^17.0.9",
+    "commitlint": "^13.1.0",
+    "eslint": "^7.32.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "husky": "^7.0.1",
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.5"
+  },
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "eslint './**/*.{ts,tsx}'",
+    "lint:fix": "npm run lint -- --fix",
+    "postinstall": "husky install",
+    "start": "next start"
+  },
+  "keywords": [
+    "next",
+    "ssg",
+    "react",
+    "javascript",
+    "eslint",
+    "jest",
+    "website"
+  ]
+}

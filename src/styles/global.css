@@ -1,0 +1,99 @@
+@font-face {
+  font-family: 'Graphik';
+  src: url('/fonts/Graphik-Regular-Web.woff2') format('woff2');
+  font-style: normal;
+  font-weight: normal;
+}
+
+/*#region CSS Variables */
+:root {
+  --font-bold: Graphik, -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-regular: Graphik, -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+  --transparent: transparent;
+}
+.app--dark {
+  --background-primary: #1c1c1c;
+  --background-secondary: #111111;
+
+  --text-primary: #ffffff;
+  --text-secondary: #ffffffb3;
+  --text-tertiary: #ffffff66;
+
+  --border-primary: #ffffff4d;
+  --border-secondary: #ffffff1a;
+}
+.app--light {
+  --background-primary: #f7f7f7;
+  --background-secondary: #ffffff;
+
+  --text-primary: #1c1c1c;
+  --text-secondary: #585757;
+  --text-tertiary: #969696;
+
+  --border-primary: #aaaaaa;
+  --border-secondary: #dddddd;
+}
+/*#endregion*/
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  font: 15px var(--font-regular);
+  box-sizing: border-box;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  font: 15px var(--font-regular);
+  word-wrap: break-word;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--background-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-bold);
+  font-weight: 600;
+  line-height: 1.3;
+}
+p {
+  line-height: 1.3;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit;
+  font: inherit;
+}
+a {
+  cursor: pointer;
+  color: var(--secondary);
+  background-color: transparent;
+  -webkit-text-decoration-skip: objects;
+  border-bottom: 1px dotted var(--secondary-light);
+  text-decoration: none;
+}
+a:active,
+a:hover {
+  outline-width: 0;
+}
+a:disabled {
+  color: var(--primary-light);
+}
