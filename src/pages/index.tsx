@@ -8,7 +8,7 @@ import Logo from '_/components/Logo';
 import SplitText from '_/components/SplitText';
 
 const NETWORK = [
-  { title: 'hello@nicolasdesle.be', link: 'mailto:hello@nicolasdesle.be' },
+  { title: 'kenneth.cross95@gmail.com', link: 'mailto:kenneth.cross95@gmail.com' },
   { title: 'GitHub', link: 'https://www.github.com/cross19xx' },
   { title: 'Linkedin', link: 'https://www.linkedin.com/in/kenneth-kwakye-gyamfi' },
   { title: 'Facebook', link: 'https://www.facebook.com/profile.php?id=100009436144652' },
