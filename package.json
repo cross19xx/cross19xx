@@ -1,0 +1,31 @@
+{
+  "name": "cross19xx",
+  "version": "2.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Kenneth Kwakye-Gyamfi",
+    "url": "https://kwakye-gyamfi.com"
+  },
+  "scripts": {
+    "astro": "astro",
+    "build": "astro build",
+    "dev": "astro dev",
+    "format": "biome format --write",
+    "lint": "biome lint",
+    "preview": "astro preview",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.3",
+    "@tailwindcss/vite": "^4.0.0",
+    "astro": "^6.4.6",
+    "tailwindcss": "^4.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.16",
+    "prettier": "3.8.4",
+    "prettier-plugin-astro": "0.14.1",
+    "prettier-plugin-tailwindcss": "^0.8.0"
+  }
+}
