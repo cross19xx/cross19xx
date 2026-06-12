@@ -1,0 +1,107 @@
+---
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Writing', href: '/writing' },
+  { label: 'Photography', href: '/photography' },
+];
+
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const contactHref = path === '/' ? '#contact' : 'mailto:kenneth.cross95@gmail.com';
+
+const isActive = (href: string) => {
+  const base = href || '/';
+  return base === '/'
+    ? path === '/'
+    : path === base || (base === '/blog' && path.startsWith('/posts'));
+};
+
+const desktopLink =
+  'relative hover:text-muted-foreground after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-muted-foreground after:transition-transform hover:after:scale-x-100';
+const desktopActive = 'font-medium text-foreground';
+const mobileLink =
+  'block rounded-lg px-3 py-2 text-base text-muted-foreground hover:text-muted-foreground/95';
+const mobileActive = 'block rounded-lg px-3 py-2 text-base font-medium text-foreground';
+---
+
+<header
+  data-nav-header
+  class="group pointer-events-none sticky top-0 z-10 transition-[padding] duration-750 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-3 sm:pt-3 sm:data-scrolled:px-0 sm:data-scrolled:pt-0">
+  <div
+    class="sm:group-data-scrolled:border-border bg-background border-border pointer-events-auto mx-auto border-b shadow-sm transition-all duration-750 ease-[cubic-bezier(0.22,1,0.36,1)] sm:max-w-3xl sm:rounded-full sm:border sm:shadow-sm sm:group-data-scrolled:max-w-full sm:group-data-scrolled:rounded-none sm:group-data-scrolled:border-x-0 sm:group-data-scrolled:border-t-0 sm:group-data-scrolled:shadow-xs">
+    <div
+      class="mx-auto flex max-w-5xl items-center justify-between p-4 transition-[padding] duration-750 ease-[cubic-bezier(0.22,1,0.36,1)] sm:py-3 sm:group-data-scrolled:py-4">
+      <a href="/" aria-label="Homepage" class="font-mono text-sm font-medium tracking-wide">
+        KKG<span class="text-muted-foreground">_</span>
+      </a>
+      <nav class="flex items-center gap-7">
+        <div class="text-muted-foreground flex items-center gap-7 text-sm max-sm:hidden">
+          {
+            navLinks.map((link) => (
+              <a
+                href={link.href}
+                aria-current={isActive(link.href) ? 'page' : undefined}
+                class={isActive(link.href) ? desktopActive : desktopLink}>
+                {link.label}
+              </a>
+            ))
+          }
+        </div>
+
+        <a
+          href={contactHref}
+          class="text-primary-foreground bg-primary rounded-full px-3.5 py-1.5 text-sm font-medium transition-transform active:scale-98">
+          Get in touch
+        </a>
+
+        <button
+          type="button"
+          data-menu-button
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          class="group/menu text-muted-foreground -mr-2 p-2 sm:hidden">
+          <span class="sr-only">Toggle menu</span>
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true"
+            class="size-5 group-aria-expanded/menu:hidden">
+            <path d="M3 5h14M3 10h14M3 15h14" stroke-linecap="round"></path>
+          </svg>
+
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true"
+            class="size-5 group-not-aria-expanded/menu:hidden">
+            <path d="M5 5l10 10M15 5L5 15" stroke-linecap="round"></path>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <div
+    id="mobile-menu"
+    hidden
+    data-mobile-menu
+    class="border-border/40 bg-background/95 pointer-events-auto absolute inset-x-0 top-full border-y shadow-sm sm:hidden">
+    <nav aria-label="Mobile" class="mx-auto max-w-5xl space-y-1 p-4">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.href}
+            aria-current={isActive(link.href) ? 'page' : undefined}
+            class={isActive(link.href) ? mobileActive : mobileLink}>
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>

@@ -30,6 +30,37 @@ const { description, title, image } = Astro.props;
     </div>
 
     <script>
+      // The ClientRouter swaps the DOM on navigation, so all element wiring
+      // happens inside astro:page-load (which also fires on the first load).
+      let syncNavbar: () => void = () => {};
+      document.addEventListener('scroll', () => syncNavbar(), { passive: true });
+
+      const handleMobileNavigation = () => {
+        const menuButton = document.querySelector('[data-menu-button]')!;
+        const mobileMenu = document.querySelector<HTMLElement>('[data-mobile-menu]')!;
+        const navHeader = document.querySelector('[data-nav-header]')!;
+
+        // Detached navbar — floats at the top, expands to full width on scroll
+        syncNavbar = () => {
+          navHeader.toggleAttribute('data-scrolled', window.scrollY > 16 || !mobileMenu.hidden);
+        };
+
+        menuButton.addEventListener('click', () => {
+          const open = mobileMenu.hidden;
+          mobileMenu.hidden = !open;
+          menuButton.setAttribute('aria-expanded', String(open));
+          syncNavbar();
+        });
+        mobileMenu.addEventListener('click', (event) => {
+          if (!(event.target as Element).closest('a')) return;
+          mobileMenu.hidden = true;
+          menuButton.setAttribute('aria-expanded', 'false');
+          syncNavbar();
+        });
+
+        syncNavbar();
+      };
+
       const handlePageLoad = () => {
         // Scroll reveal, responsible for adding `.reveal-visible` to elements that are visible in the viewport
         const revealObserver = new IntersectionObserver(
@@ -44,6 +75,8 @@ const { description, title, image } = Astro.props;
           { threshold: 0.1, rootMargin: '0px 0px -40px 0px' },
         );
         document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+
+        handleMobileNavigation();
       };
 
       document.addEventListener('astro:page-load', handlePageLoad);
