@@ -44,7 +44,7 @@ const eyebrow = `Notes — ${posts.length} posts, ${years.length} years`;
               type="button"
               data-topic-filter={topic.value}
               aria-pressed={topic.value === 'all' ? 'true' : 'false'}
-              class="text-muted-foreground inset-ring-border hover:text-foreground aria-pressed:bg-foreground aria-pressed:text-background rounded-full px-3.5 py-1.5 text-sm inset-ring aria-pressed:font-medium aria-pressed:inset-ring-0">
+              class="text-muted-foreground inset-ring-border hover:text-foreground aria-pressed:bg-foreground aria-pressed:text-background rounded-md px-3.5 py-1.5 text-sm inset-ring aria-pressed:font-medium aria-pressed:inset-ring-0">
               {topic.label}
             </button>
           ))

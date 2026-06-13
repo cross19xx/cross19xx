@@ -75,7 +75,7 @@ const posts = (await getCollection('blog'))
       <div class="reveal mt-10 flex flex-wrap items-center gap-6 [--reveal-delay:300ms]">
         <a
           href={`mailto:${EMAIL}`}
-          class="bg-foreground/90 text-background hover:bg-foreground rounded-full px-5 py-2.5 text-sm font-medium transition-transform active:scale-98">
+          class="bg-foreground/90 text-background hover:bg-foreground rounded-md px-5 py-2.5 text-sm font-medium transition-transform active:scale-98">
           {EMAIL}
         </a>
         <a
@@ -86,9 +86,9 @@ const posts = (await getCollection('blog'))
         <span class="text-muted-foreground inline-flex items-center gap-2 text-sm">
           <span class="relative flex size-2">
             <span
-              class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"
+              class="absolute inline-flex size-full animate-ping rounded-md bg-emerald-400 opacity-75"
             ></span>
-            <span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
+            <span class="relative inline-flex size-2 rounded-md bg-emerald-500"></span>
           </span>
           Open to new projects
         </span>
@@ -179,7 +179,7 @@ const posts = (await getCollection('blog'))
       <div class="reveal mt-10 flex flex-wrap items-center gap-6">
         <a
           href="/photography"
-          class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-neutral-950 transition-transform hover:bg-neutral-200 active:scale-98">
+          class="inline-flex items-center gap-2 rounded-md bg-white px-5 py-2.5 text-sm font-medium text-neutral-950 transition-transform hover:bg-neutral-200 active:scale-98">
           Browse full archive <ArrowRightIcon class="size-3" />
         </a>
         <a
