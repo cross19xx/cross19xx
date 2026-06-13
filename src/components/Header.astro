@@ -16,7 +16,9 @@ const isActive = (href: string) => {
   const base = href || '/';
   return base === '/'
     ? path === '/'
-    : path === base || (base === '/blog' && path.startsWith('/posts'));
+    : path === base ||
+        (base === '/blog' && path.startsWith('/posts')) ||
+        (base === '/photography' && path.startsWith('/albums'));
 };
 
 const desktopLink =
