@@ -1,18 +1,297 @@
 ---
+import { getCollection } from 'astro:content';
+
+import { ArrowRightIcon, ExternalLinkIcon } from '@lucide/astro';
+
+import HomeSection from '_/components/HomeSection.astro';
+import { featured, photoSrc } from '_/data/photos';
+import { projects, statusBadge } from '_/data/projects';
+import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
+
+const skills: { name: string; blurb: string }[] = [
+  {
+    name: 'Cross-platform mobile apps',
+    blurb:
+      'One codebase, every pocket — React Native apps that feel native on both iOS and Android.',
+  },
+  {
+    name: 'Native mobile development',
+    blurb: 'Fully native iOS and Android apps when performance and platform fidelity matter most.',
+  },
+  {
+    name: 'Watch & tvOS development',
+    blurb:
+      'Native experiences for Apple Watch and Apple TV — the screens most developers never touch.',
+  },
+  {
+    name: 'Backend development',
+    blurb:
+      'APIs, data models, and infrastructure that quietly keep everything above them running. Python is my jam.',
+  },
+  {
+    name: 'Web Development',
+    blurb: 'Fast, accessible web apps and sites — from marketing pages to full product frontends.',
+  },
+  {
+    name: 'Desktop applications',
+    blurb: 'Cross-platform desktop software for the workflows that never left the big screen.',
+  },
+];
+
+const featuredProjects = projects.filter((project) => project.featured);
+
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const monthYear = (d: Date) => {
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+};
+
+const pad = (n: number) => String(n + 1).padStart(2, '0');
 ---
 
-<BaseLayout title="Kenneth Kwakye-Gyamfi" description="Personal website of Kenneth Kwakye-Gyamfi">
-  <div class="container mx-auto p-4">
-    <h1 class="reveal font-display text-2xl font-bold [--reveal-delay:100ms]">
-      Kenneth Kwakye-Gyamfi
-    </h1>
-    <p class="reveal text-muted-foreground [--reveal-delay:200ms]">
-      I'm a software engineer and photographer.
-    </p>
-    <p
-      class="reveal text-caption-foreground font-mono text-sm tracking-wide uppercase [--reveal-delay:300ms]">
-      kwakye-gyamfi.com
-    </p>
-  </div>
+<BaseLayout
+  title="Kenneth Kwakye-Gyamfi - Software Engineer + Photographer"
+  description="Kenneth Kwakye-Gyamfi is a senior mobile & web full stack engineer, husband, father, photographer, and a proud Ghanaian.">
+  <!-- Hero section -->
+  <section class="pt-24 pb-20 sm:pt-32 sm:pb-28">
+    <div class="mx-auto max-w-5xl px-6 lg:px-8">
+      <p class="reveal text-caption-foreground font-mono text-sm tracking-wide uppercase">
+        Accra, Ghana — 5.6037° N, 0.1870° W
+      </p>
+      <h1
+        class="reveal font-display mt-6 max-w-[24ch] text-4xl font-medium tracking-tight text-balance [--reveal-delay:100ms] sm:text-5xl md:text-6xl">
+        Mobile Engineer with a camera never far from reach.
+      </h1>
+      <p
+        class="reveal text-muted-foreground mt-6 max-w-[55ch] text-lg text-pretty [--reveal-delay:200ms]">
+        I'm Kenneth Kwakye-Gyamfi, a senior mobile & web full stack engineer, husband, father,
+        photographer, and a proud Ghanaian.
+      </p>
+
+      <div class="reveal mt-10 flex flex-wrap items-center gap-6 [--reveal-delay:300ms]">
+        <a
+          href={`mailto:${EMAIL}`}
+          class="bg-foreground/90 text-background hover:bg-foreground rounded-full px-5 py-2.5 text-sm font-medium transition-transform active:scale-98">
+          {EMAIL}
+        </a>
+        <a
+          href="https://www.github.com/cross19xx"
+          class="text-muted-foreground hover:text-foreground text-sm font-medium">
+          GitHub ↗
+        </a>
+        <span class="text-muted-foreground inline-flex items-center gap-2 text-sm">
+          <span class="relative flex size-2">
+            <span
+              class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"
+            ></span>
+            <span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
+          </span>
+          Open to new projects
+        </span>
+      </div>
+
+      <p class="reveal text-muted-foreground mt-8 font-mono text-sm [--reveal-delay:400ms]">
+        9+ years shipping mobile — most recently Senior Mobile Engineer at Wellthy &middot;
+        <a
+          href="/about#experience"
+          class="text-foreground decoration-border hover:text-foreground/90 hover:decoration-foreground/90 underline underline-offset-4"
+          >full history</a
+        >
+      </p>
+    </div>
+  </section>
+
+  <!-- Experience (work/what I do) -->
+  <HomeSection
+    id="work"
+    title="What I do"
+    eyebrow="01 / Work"
+    description="Most of my work lives on a screen in someone's pocket. I build mobile apps end to end — iOS, Android, Watch, tvOS — and handle the backend and web layers that sit behind them.">
+    <ul role="list" class="mt-12 grid grid-cols-1 gap-x-12 gap-y-10 sm:grid-cols-2">
+      {
+        skills.map(({ name, blurb }, i) => (
+          <li class={`reveal flex gap-5 ${i % 2 === 1 ? 'sm:[--reveal-delay:100ms]' : ''}`}>
+            <span class="text-caption-foreground font-mono text-sm">{pad(i)}</span>
+            <div>
+              <h3 class="text-base font-medium">{name}</h3>
+              <p class="text-muted-foreground mt-1.5 text-base text-pretty">{blurb}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </HomeSection>
+
+  <!-- Projects -->
+  <HomeSection
+    id="projects"
+    title="Projects"
+    eyebrow="02 / Building Next"
+    description="A bench of ideas in various states of done — some shipping, some still sketches in a notebook."
+    link={{ text: 'All Projects', href: '/projects' }}>
+    <ul role="list" class="divide-border/50 mt-8 divide-y">
+      {
+        featuredProjects.map((project, i) => (
+          <li class="reveal flex gap-5 py-8">
+            <span class="text-caption-foreground font-mono text-sm">{pad(i)}</span>
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-3">
+                <h3 class="text-base font-medium">
+                  <a href={project.link}>{project.name}</a>
+                </h3>
+                <span class={statusBadge[project.status]}>{project.status}</span>
+              </div>
+
+              <p class="text-muted-foreground mt-1.5 max-w-[60ch] text-base text-pretty">
+                {project.summary}
+              </p>
+              <p class="text-caption-foreground mt-3 font-mono text-xs tracking-wide uppercase">
+                {project.techStack.join('  ·  ')}
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </HomeSection>
+
+  <!-- Photography -->
+  <section
+    id="photography"
+    class="bg-neutral-950 py-20 text-white sm:py-28 dark:border-y dark:border-white/10">
+    <div class="mx-auto max-w-5xl px-6 lg:px-8">
+      <div class="reveal flex items-baseline justify-between gap-6">
+        <h2 class="text-2xl font-semibold tracking-tight">Photography</h2>
+        <p class="font-mono text-sm tracking-wide text-neutral-500 uppercase">03 / Field Notes</p>
+      </div>
+      <p class="reveal mt-4 max-w-[55ch] text-base text-pretty text-neutral-400">
+        Code is how I make a living; photographs are how I keep looking. A rolling selection of
+        frames from Accra and wherever the road goes.
+      </p>
+      <div class="mt-12 columns-2 gap-4 sm:columns-3 sm:gap-5">
+        {
+          featured.map(({ photo, aspect, delay }) => (
+            <figure class={`reveal mb-4 break-inside-avoid sm:mb-5 ${delay ?? ''}`}>
+              <a
+                href="/photography"
+                class="group block overflow-hidden rounded-sm outline-1 -outline-offset-1 outline-white/10">
+                <img
+                  src={photoSrc(photo.variant)}
+                  alt={photo.alt}
+                  loading="lazy"
+                  class={`${aspect} w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105`}
+                />
+              </a>
+              <figcaption class="mt-2 flex justify-between font-mono text-xs text-neutral-500">
+                <span>{photo.title}</span>
+                <span>{photo.file}</span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+      <div class="reveal mt-10 flex flex-wrap items-center gap-6">
+        <a
+          href="/photography"
+          class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-neutral-950 transition-transform hover:bg-neutral-200 active:scale-98">
+          Browse full archive <ArrowRightIcon class="size-3" />
+        </a>
+        <a
+          href="https://www.instagram.com/kenneth_kwakyegyamfi"
+          class="inline-flex items-center gap-2 text-sm font-medium text-neutral-400 hover:text-white"
+          target="_blank">
+          Instagram <ExternalLinkIcon class="size-3" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog/Writing -->
+  <HomeSection
+    id="writing"
+    title="Writing"
+    eyebrow="04 / Notes"
+    description="Occasional notes on building software, making pictures, and the places the two overlap."
+    link={{ text: 'All Posts', href: '/blog' }}>
+    <ul role="list" class="divide-border/50 mt-8 divide-y">
+      {
+        posts.map((post) => (
+          <li class="reveal">
+            <a
+              href={`/posts/${post.id}`}
+              class="group flex flex-col gap-2 py-7 sm:flex-row sm:gap-10">
+              <span class="text-caption-foreground w-28 shrink-0 font-mono text-sm">
+                {monthYear(post.data.date)}
+              </span>
+              <span class="flex-1">
+                <span class="group-hover:decoration-border block text-base font-medium group-hover:underline group-hover:underline-offset-4">
+                  {post.data.title}
+                </span>
+                <span class="text-muted-foreground mt-1.5 block max-w-[60ch] text-base text-pretty">
+                  {post.data.description}
+                </span>
+                <span class="text-caption-foreground mt-3 block font-mono text-xs tracking-wide uppercase">
+                  {post.data.readingTime} min · {post.data.topic}
+                </span>
+              </span>
+
+              <ArrowRightIcon
+                aria-hidden="true"
+                class="text-caption-foreground size-3 self-end transition-transform group-hover:translate-x-1 sm:self-center"
+              />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </HomeSection>
+
+  <!-- About -->
+  <section id="about" class="border-border border-t py-20 sm:py-28">
+    <div class="mx-auto max-w-5xl px-6 lg:px-8">
+      <div class="grid grid-cols-1 gap-x-16 gap-y-10 md:grid-cols-[1fr_2fr]">
+        <div class="reveal flex items-baseline justify-between gap-6 md:block">
+          <h2 class="text-2xl font-semibold tracking-tight">About</h2>
+          <p class="text-caption-foreground font-mono text-sm tracking-wide uppercase md:mt-2">
+            05 / Person
+          </p>
+        </div>
+        <div class="reveal text-muted-foreground space-y-5 text-base md:[--reveal-delay:100ms]">
+          <p class="max-w-[60ch] text-pretty">
+            I'm a senior full stack mobile and web engineer currently based in Accra, Ghana. I'm
+            also a photographer whenever the light cooperates. My work spans the whole lifecycle of
+            a product, from wire-framing the first screens to running the backends behind them.
+          </p>
+          <a
+            href="/about"
+            class="reveal text-muted-foreground hover:text-foreground mt-6 inline-flex items-center gap-2 text-sm font-medium">
+            More about me <ArrowRightIcon class="size-3" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="border-border border-t py-20 sm:py-28">
+    <div class="mx-auto max-w-5xl px-6 lg:px-8">
+      <p class="text-caption-foreground font-mono text-sm tracking-wide uppercase">06 / Contact</p>
+      <h2
+        class="reveal mt-6 max-w-[24ch] text-3xl font-semibold tracking-tight text-balance [--reveal-delay:100ms] sm:text-4xl">
+        Have a project in mind — or a print you'd like on your wall?
+      </h2>
+      <a
+        href={`mailto:${EMAIL}`}
+        class="reveal decoration-border hover:decoration-foreground mt-8 inline-block text-xl font-medium underline underline-offset-4 [--reveal-delay:200ms] sm:text-2xl">
+        {EMAIL}
+      </a>
+    </div>
+  </section>
 </BaseLayout>

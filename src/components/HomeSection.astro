@@ -1,0 +1,37 @@
+---
+import { ArrowRightIcon } from '@lucide/astro';
+
+interface Props {
+  id: string;
+  title: string;
+  eyebrow: string;
+  description: string;
+  link?: { text: string; href: string };
+}
+
+const { id, title, eyebrow, description, link } = Astro.props;
+---
+
+<section id={id} class="border-border border-t py-20 sm:py-28">
+  <div class="mx-auto max-w-5xl px-6 lg:px-8">
+    <div class="reveal flex items-baseline justify-between gap-6">
+      <h2 class="text-2xl font-semibold tracking-tight">{title}</h2>
+      <p class="text-caption-foreground font-mono text-sm tracking-wide uppercase">{eyebrow}</p>
+    </div>
+    <p class="reveal text-muted-foreground mt-4 max-w-[55ch] text-base text-pretty">
+      {description}
+    </p>
+
+    <slot />
+
+    {
+      link && (
+        <a
+          href={link.href}
+          class="reveal text-muted-foreground hover:text-foreground mt-6 inline-flex items-center gap-2 text-sm font-medium">
+          {link.text} <ArrowRightIcon class="size-3" />
+        </a>
+      )
+    }
+  </div>
+</section>
