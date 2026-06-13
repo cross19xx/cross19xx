@@ -9,6 +9,7 @@
   "scripts": {
     "astro": "astro",
     "build": "astro build",
+    "deploy": "node --env-file=.env scripts/trigger-deploy.mjs",
     "dev": "astro dev",
     "format": "biome format --write",
     "lint": "biome lint",
