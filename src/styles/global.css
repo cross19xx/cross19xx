@@ -91,6 +91,48 @@
       translate: 0 -0.25rem;
     }
   }
+
+  /* Lightbox — fade + scale on open, reversed on close (display/overlay are
+     transitioned discretely so the close animation runs before it leaves the top layer) */
+  [data-lightbox] {
+    opacity: 0;
+    scale: 0.96;
+    transition:
+      opacity 0.25s ease,
+      scale 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      overlay 0.25s ease allow-discrete,
+      display 0.25s ease allow-discrete;
+  }
+
+  [data-lightbox][open] {
+    opacity: 1;
+    scale: 1;
+  }
+
+  @starting-style {
+    [data-lightbox][open] {
+      opacity: 0;
+      scale: 0.96;
+    }
+  }
+
+  [data-lightbox]::backdrop {
+    opacity: 0;
+    transition:
+      opacity 0.25s ease,
+      overlay 0.25s ease allow-discrete,
+      display 0.25s ease allow-discrete;
+  }
+
+  [data-lightbox][open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    [data-lightbox][open]::backdrop {
+      opacity: 0;
+    }
+  }
 }
 
 @theme inline {
