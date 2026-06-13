@@ -11,7 +11,9 @@ import { getFeaturedPhotos } from '_/data/photos';
 import { projects } from '_/data/projects';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
-import { padNumber } from '_/utils/misc';
+import { MASONRY_BREAKPOINTS, padNumber } from '_/utils/misc';
+
+import { Masonry } from 'astro-masonry';
 
 const skills: { name: string; blurb: string }[] = [
   {
@@ -149,7 +151,8 @@ const posts = (await getCollection('blog'))
         Code is how I make a living; photographs are how I keep looking. A rolling selection of
         frames from Accra and wherever the road goes.
       </p>
-      <div class="mt-12 columns-2 gap-4 sm:columns-3 sm:gap-5">
+
+      <Masonry breakpointCols={MASONRY_BREAKPOINTS} class="mt-12 gap-4">
         {
           featuredPhotos.map(({ photo, aspect, delay }) => (
             <figure class={`reveal mb-4 break-inside-avoid sm:mb-5 ${delay ?? ''}`}>
@@ -171,7 +174,8 @@ const posts = (await getCollection('blog'))
             </figure>
           ))
         }
-      </div>
+      </Masonry>
+
       <div class="reveal mt-10 flex flex-wrap items-center gap-6">
         <a
           href="/photography"

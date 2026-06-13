@@ -1,3 +1,9 @@
+export const MASONRY_BREAKPOINTS = {
+  default: 3,
+  700: 2,
+  500: 1,
+} as const;
+
 export const padNumber = (n: string | number, pad = 2) => String(n).padStart(pad, '0');
 
 export const topicLabel = (topic: string) => {
