@@ -1,0 +1,102 @@
+---
+import PageIntro from '_/components/PageIntro.astro';
+import { EMAIL } from '_/data/site';
+import BaseLayout from '_/layouts/Base.astro';
+
+const pageTitle = 'Uses - Kenneth Kwakye-Gyamfi';
+const pageDescription =
+  'The hardware, software, and camera gear Kenneth Kwakye-Gyamfi actually uses';
+
+const sections = [
+  {
+    title: 'Hardware',
+    eyebrow: '01 / Metal',
+    items: [
+      {
+        item: 'MacBook Pro 16" (M1 Max)',
+        note: 'the build machine — Xcode, Android Studio, and a hundred tabs',
+      },
+    ],
+  },
+  {
+    title: 'Development',
+    eyebrow: '02 / Software',
+    items: [
+      { item: 'Cursor', note: 'with as few extensions as I can get away with' },
+      {
+        item: 'Android Studio + XCode',
+        note: 'the native halves of every cross-platform week',
+      },
+      {
+        item: 'cmux',
+        note: "a pretty awesome terminal multiplexer if I'm being honest",
+      },
+      {
+        item: 'Proxyman',
+        note: 'watching the network layer so users never have to',
+      },
+      {
+        item: 'AI models',
+        note: "because I can't spend precious time writing code for things that are better left to AI",
+      },
+    ],
+  },
+  {
+    title: 'Photography',
+    eyebrow: '03 / Glass',
+    items: [
+      { item: 'Sony A7 IV', note: 'the camera I use. My prized-possession' },
+      { item: 'Sigma 24-70mm f/2.8 DG DN | Art', note: 'the lens I use. My favorite lens.' },
+      { item: 'Adobe Lightroom Classic', note: 'edited lightly, captioned honestly' },
+      { item: 'DaVinci Resolve', note: 'on the rare occasion that I capture a video' },
+    ],
+  },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <PageIntro
+    eyebrow="Inventory — updated Jun 2026"
+    title="Uses"
+    description="The tools I actually reach for — at the desk on weekdays, in the bag on weekends. Kept deliberately short; everything here earns its place."
+  />
+
+  <!-- Sections -->
+  <div class="border-border border-t py-16 sm:py-20">
+    <div class="mx-auto max-w-5xl space-y-16 px-6 lg:px-8">
+      {
+        sections.map((section) => (
+          <section class="reveal">
+            <div class="flex items-baseline justify-between gap-6">
+              <h2 class="text-2xl font-semibold tracking-tight">{section.title}</h2>
+              <p class="text-caption-foreground font-mono text-sm tracking-wide uppercase">
+                {section.eyebrow}
+              </p>
+            </div>
+
+            <ul role="list" class="divide-border mt-6 divide-y">
+              {section.items.map(({ item, note }) => (
+                <li class="flex flex-col gap-1 py-4 sm:flex-row sm:gap-10">
+                  <span class="w-72 shrink-0 font-medium">{item}</span>
+                  <span class="text-muted-foreground text-pretty">{note}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+
+  <section class="border-border border-t py-16 sm:py-20">
+    <div class="mx-auto max-w-5xl px-6 lg:px-8">
+      <p class="reveal text-muted-foreground max-w-[55ch] text-pretty">
+        Curious about something that isn't listed, or want a longer opinion on something that is? <a
+          href={`mailto:${EMAIL}?subject=Uses`}
+          class="decoration-border hover:decoration-foreground text-foreground font-medium underline underline-offset-4"
+          >Ask away</a
+        >.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
