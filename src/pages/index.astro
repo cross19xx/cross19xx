@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 
 import { ArrowRightIcon, ExternalLinkIcon } from '@lucide/astro';
@@ -154,8 +155,9 @@ const posts = (await getCollection('blog'))
               <a
                 href="/photography"
                 class="group block overflow-hidden rounded-sm outline-1 -outline-offset-1 outline-white/10">
-                <img
+                <Image
                   src={photoSrc(photo.variant)}
+                  inferSize
                   alt={photo.alt}
                   loading="lazy"
                   class={`${aspect} w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105`}

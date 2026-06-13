@@ -39,6 +39,12 @@ export default defineConfig({
       weights: ['600', '700'],
     },
   ],
+  image: {
+    domains: [
+      'assets.ui.sh', // TODO: Remove this once the images are hosted on the blob store
+      'ro5duieh0n6tvtsi.public.blob.vercel-storage.com',
+    ],
+  },
   integrations: [sitemap(), tailwindcss()],
   markdown: {
     shikiConfig: {
