@@ -1,0 +1,36 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import { ArrowRightIcon } from '@lucide/astro';
+
+import { monthYear } from '_/utils/date';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+---
+
+<a href={`/posts/${post.id}`} class="group flex flex-col gap-2 py-7 sm:flex-row sm:gap-10">
+  <span class="text-caption-foreground w-28 shrink-0 font-mono text-sm">
+    {monthYear(post.data.date)}
+  </span>
+  <span class="flex-1">
+    <span
+      class="group-hover:decoration-foreground/40 block text-base font-medium group-hover:underline group-hover:underline-offset-4">
+      {post.data.title}
+    </span>
+    <span class="text-muted-foreground mt-1.5 block max-w-[60ch] text-base text-pretty">
+      {post.data.description}
+    </span>
+    <span class="text-caption-foreground mt-3 block font-mono text-xs tracking-wide uppercase">
+      {post.data.readingTime} min · {post.data.topic}
+    </span>
+  </span>
+
+  <ArrowRightIcon
+    aria-hidden="true"
+    class="text-caption-foreground size-3 self-end transition-transform group-hover:translate-x-1 sm:self-center"
+  />
+</a>

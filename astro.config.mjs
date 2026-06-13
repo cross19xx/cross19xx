@@ -42,7 +42,7 @@ export default defineConfig({
   integrations: [sitemap(), tailwindcss()],
   markdown: {
     shikiConfig: {
-      theme: 'github-dark-default',
+      theme: 'dracula',
     },
   },
   site: 'https://www.kwakye-gyamfi.com',

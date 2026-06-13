@@ -1,0 +1,137 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+
+import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/astro';
+
+import BaseLayout from '_/layouts/Base.astro';
+import { fullDate } from '_/utils/date';
+import { topicLabel } from '_/utils/misc';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  older: CollectionEntry<'blog'> | null;
+  newer: CollectionEntry<'blog'> | null;
+}
+
+export async function getStaticPaths() {
+  const paths = [];
+
+  const posts = (await getCollection('blog')).sort(
+    (a, b) => a.data.date.valueOf() - b.data.date.valueOf(),
+  );
+
+  posts.forEach((post: CollectionEntry<'blog'>, i: number) => {
+    paths.push({
+      params: { id: post.id },
+      props: {
+        post,
+        older: i > 0 ? posts[i - 1] : null,
+        newer: i < posts.length - 1 ? posts[i + 1] : null,
+      },
+    });
+  });
+
+  return paths;
+}
+
+const { post, older, newer } = Astro.props;
+const { Content } = await render(post);
+const title = `${post.data.title} - Kenneth Kwakye-Gyamfi`;
+const articleDate = fullDate(post.data.date);
+
+const navLink =
+  'mt-1 block text-sm font-medium group-hover:underline group-hover:decoration-border group-hover:underline-offset-4';
+---
+
+<BaseLayout title={title} description={post.data.description}>
+  <article>
+    <!-- Post Header -->
+    <div class="pt-20 pb-12 sm:pt-28 sm:pb-16">
+      <div class="mx-auto max-w-5xl px-6 lg:px-8">
+        <a
+          href="/blog"
+          class="reveal text-caption-foreground hover:text-foreground inline-flex items-center gap-2 font-mono text-sm"
+          ><ArrowLeftIcon class="size-3" /> All Posts</a
+        >
+        <p
+          class="reveal text-caption-foreground mt-10 font-mono text-sm tracking-wide uppercase [--reveal-delay:100ms]">
+          {articleDate} · {post.data.readingTime} min · {topicLabel(post.data.topic)}
+        </p>
+        <h1
+          class="reveal font-display mt-6 max-w-[26ch] text-4xl font-medium tracking-tight text-pretty [--reveal-delay:200ms] sm:text-5xl">
+          {post.data.title}
+        </h1>
+        <p
+          class="reveal text-muted-foreground mt-6 max-w-[55ch] text-lg text-pretty [--reveal-delay:300ms]">
+          {post.data.lede}
+        </p>
+      </div>
+    </div>
+
+    <!-- Post body -->
+    <div class="border-border border-t py-12 sm:py-16 dark:border-white/10">
+      <div class="mx-auto max-w-5xl px-6 lg:px-8">
+        <div class="prose max-w-[65ch]">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Older / newer -->
+  <nav aria-label="More posts" class="border-border border-t py-10">
+    <div class="mx-auto flex max-w-5xl items-center justify-between gap-6 px-6 lg:px-8">
+      {
+        older ? (
+          <a href={`/posts/${older.id}`} class="group max-w-[45%]">
+            <span class="text-caption-foreground font-mono text-xs tracking-wide uppercase">
+              <ArrowLeftIcon class="size-3" /> Older
+            </span>
+            <span class={navLink}>{older.data.title}</span>
+          </a>
+        ) : (
+          <span class="text-caption-foreground max-w-[45%] font-mono text-xs">
+            This is the first post
+          </span>
+        )
+      }
+      {
+        newer ? (
+          <a href={`/posts/${newer.id}`} class="group max-w-[45%] text-right">
+            <span class="text-caption-foreground font-mono text-xs tracking-wide uppercase">
+              Newer <ArrowRightIcon class="size-3" />
+            </span>
+            <span class={navLink}>{newer.data.title}</span>
+          </a>
+        ) : (
+          <span class="text-caption-foreground max-w-[45%] text-right font-mono text-xs">
+            This is the latest post
+          </span>
+        )
+      }
+    </div>
+  </nav>
+
+  <script>
+    // Inject a copy button into every code block (re-runs after client-side nav)
+    function addCopyButtons() {
+      const [copyLabel, copiedLabel] = ['Copy', 'Copied'];
+      document.querySelectorAll<HTMLPreElement>('.prose pre').forEach((pre) => {
+        if (pre.querySelector('[data-copy]')) return;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.setAttribute('data-copy', '');
+        button.className =
+          'absolute top-3 right-3 rounded-md bg-border px-2 py-1 font-mono text-xs text-foreground cursor-pointer backdrop-blur-sm inset-ring inset-ring-border hover:text-foreground';
+        button.textContent = copyLabel;
+        button.addEventListener('click', async () => {
+          await navigator.clipboard.writeText(pre.querySelector('code')?.innerText ?? '');
+          button.textContent = copiedLabel;
+          setTimeout(() => (button.textContent = copyLabel), 1500);
+        });
+        pre.appendChild(button);
+      });
+    }
+    document.addEventListener('astro:page-load', addCopyButtons);
+  </script>
+</BaseLayout>

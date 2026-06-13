@@ -1,3 +1,12 @@
+export const fullDate = (d: Date) => {
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+};
+
 export const monthDay = (d: Date) => {
   return d.toLocaleDateString('en-US', {
     month: 'short',
