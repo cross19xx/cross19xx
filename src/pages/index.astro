@@ -7,7 +7,7 @@ import { ArrowRightIcon, ExternalLinkIcon } from '@lucide/astro';
 import HomeSection from '_/components/HomeSection.astro';
 import PostRow from '_/components/PostRow.astro';
 import ProjectRow from '_/components/ProjectRow.astro';
-import { featured, photoSrc } from '_/data/photos';
+import { getFeaturedPhotos } from '_/data/photos';
 import { projects } from '_/data/projects';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
@@ -44,6 +44,7 @@ const skills: { name: string; blurb: string }[] = [
 ];
 
 const featuredProjects = projects.filter((project) => project.featured);
+const featuredPhotos = await getFeaturedPhotos();
 
 const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -150,13 +151,13 @@ const posts = (await getCollection('blog'))
       </p>
       <div class="mt-12 columns-2 gap-4 sm:columns-3 sm:gap-5">
         {
-          featured.map(({ photo, aspect, delay }) => (
+          featuredPhotos.map(({ photo, aspect, delay }) => (
             <figure class={`reveal mb-4 break-inside-avoid sm:mb-5 ${delay ?? ''}`}>
               <a
                 href="/photography"
                 class="group block overflow-hidden rounded-sm outline-1 -outline-offset-1 outline-white/10">
                 <Image
-                  src={photoSrc(photo.variant)}
+                  src={photo.url}
                   inferSize
                   alt={photo.alt}
                   loading="lazy"
