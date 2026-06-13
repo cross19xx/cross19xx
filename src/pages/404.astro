@@ -1,0 +1,35 @@
+---
+import { ArrowRightIcon } from '@lucide/astro';
+
+import BaseLayout from '_/layouts/Base.astro';
+---
+
+<BaseLayout title="404 - Kenneth Kwakye-Gyamfi" description="Page not found">
+  <section class="min-h-[calc(100dvh-11.5rem)] pt-24 pb-20 sm:pt-32 sm:pb-28">
+    <div class="mx-auto max-w-3xl px-6">
+      <p class="reveal text-caption-foreground font-mono text-sm tracking-wide uppercase">
+        DSC_0000 — file not found
+      </p>
+      <h1
+        class="reveal font-display mt-6 max-w-[22ch] text-4xl font-medium tracking-tight text-balance [--reveal-delay:100ms] sm:text-5xl">
+        This frame doesn't exist.
+      </h1>
+      <p
+        class="reveal text-muted-foreground mt-6 max-w-[55ch] text-lg text-pretty [--reveal-delay:200ms]">
+        Either the link is old, or it was never developed. The rest of the archive is intact.
+      </p>
+      <div class="reveal mt-10 flex flex-wrap items-center gap-8 [--reveal-delay:300ms]">
+        <a
+          href="/"
+          class="bg-primary/90 text-primary-foreground hover:bg-primary rounded-full px-5 py-2.5 text-sm font-medium transition-transform">
+          Back home
+        </a>
+        <a
+          href="/blog"
+          class="text-foreground/90 hover:text-foreground inline-flex items-center gap-2 text-sm font-medium">
+          Writing <ArrowRightIcon class="size-3" />
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
