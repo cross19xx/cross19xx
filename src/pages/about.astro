@@ -1,0 +1,92 @@
+---
+import { Image } from 'astro:assets';
+
+import { ArrowRightIcon } from '@lucide/astro';
+
+import portrait from '_/assets/img/2I2A8044.jpg';
+import PageIntro from '_/components/PageIntro.astro';
+import { WORK_EXPERIENCES } from '_/data/experiences';
+import BaseLayout from '_/layouts/Base.astro';
+import { blobUrl } from '_/utils/misc';
+
+const pageTitle = 'About — Kenneth Kwakye-Gyamfi';
+const pageDescription =
+  'About Kenneth Kwakye-Gyamfi — full stack mobile and web developer and photographer based in Accra, Ghana.';
+const bio = [
+  "I'm Kenneth — a full stack mobile and web developer based in Accra, Ghana. My work spans the whole lifecycle of a product: wireframing the first screens, building the apps people hold, and running the backends behind them. I have a particular soft spot for the corners of the Apple ecosystem most developers never visit — the watch, the TV, the widget.",
+  'When I\'m not shipping software, I\'m out with a camera. Photography taught me to pay attention to light, framing, and timing — the same instincts that make an interface feel right. The two practices feed each other more than they compete: the discipline of <a href="/en/posts/single-prime-lens" class="inline-link">a single prime lens</a> shaped how I choose tech stacks, and a year of my own EXIF data reads <a href="/en/posts/reading-exif-like-a-commit-history" class="inline-link">like a commit history</a>.',
+  "Most of what I build lately is shaped by where I build it. Accra's networks, payment rails, and transport systems don't match the assumptions baked into most frameworks — which is inconvenient for shipping and excellent for thinking. The gap between how software imagines life works and how life actually works here is where my favorite projects live.",
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <PageIntro eyebrow="Person — Accra, Ghana" title="Developer by trade, photographer by desire." />
+
+  <!-- Bio -->
+  <section class="border-border border-t py-16 sm:py-20">
+    <div class="mx-auto max-w-5xl px-6 lg:px-8">
+      <div class="grid grid-cols-1 gap-x-16 gap-y-12 md:grid-cols-[2fr_3fr]">
+        <figure class="reveal">
+          <Image
+            src={portrait}
+            alt="Portrait of Kenneth Kwakye-Gyamfi"
+            class="aspect-4/5 w-full rounded-md object-cover object-top outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10"
+          />
+          <figcaption class="mt-2.5 flex justify-between font-mono text-xs text-neutral-500">
+            <span>Self portrait, Accra</span><span>2I2A8044.jpg</span>
+          </figcaption>
+        </figure>
+        <div class="reveal text-muted-foreground space-y-5 text-base md:[--reveal-delay:100ms]">
+          {bio.map((paragraph) => <p class="max-w-[60ch] text-pretty" set:html={paragraph} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience" class="border-border border-t py-16 sm:py-20">
+    <div class="mx-auto max-w-5xl px-6 lg:px-8">
+      <div class="reveal flex items-baseline justify-between gap-6">
+        <h2 class="text-2xl font-semibold tracking-tight">Experience</h2>
+        <p class="text-caption-foreground font-mono text-sm tracking-wide uppercase">9+ years</p>
+      </div>
+      <p class="reveal text-foreground mt-4 max-w-[55ch] text-base text-pretty">
+        Mostly mobile, mostly React Native with native Swift and Kotlin underneath, and a run of
+        regulated, high-consequence domains — healthcare, banking, and emergency response.
+      </p>
+      <ul role="list" class="divide-border/50 mt-8 divide-y">
+        {
+          WORK_EXPERIENCES.map((job) => (
+            <li class="reveal flex flex-col gap-2 py-7 sm:flex-row sm:gap-10">
+              <span class="text-caption-foreground w-44 shrink-0 font-mono text-sm">
+                {job.dates}
+              </span>
+              <div>
+                <h3 class="text-base font-medium">{job.role}</h3>
+                <p class="text-caption-foreground mt-1 font-mono text-xs tracking-wide uppercase">
+                  {job.context}
+                </p>
+                <p class="text-muted-foreground mt-2 max-w-[60ch] text-base text-pretty">
+                  {job.blurb}
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="reveal mt-10 flex flex-wrap items-center justify-between gap-6">
+        <p class="text-foreground font-mono text-xs tracking-wide uppercase">
+          BSc. Computer Engineering — KNUST, Kumasi · 2013 — 2017
+        </p>
+
+        <a
+          href={blobUrl('Kenneth_Kwakye-Gyamfi_Resume.pdf')}
+          target="_blank"
+          class="text-foreground decoration-border hover:text-foreground/90 hover:decoration-foreground/90 inline-flex items-center gap-2 text-sm font-medium underline">
+          Download résumé (PDF) <ArrowRightIcon class="size-3" />
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

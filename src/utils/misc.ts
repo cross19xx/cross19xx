@@ -10,3 +10,8 @@ export const topicLabel = (topic: string) => {
       return topic;
   }
 };
+
+export const blobUrl = (path: string) => {
+  const BLOB_STORE_URL = 'https://ro5duieh0n6tvtsi.public.blob.vercel-storage.com';
+  return `${BLOB_STORE_URL}/${path}`;
+};

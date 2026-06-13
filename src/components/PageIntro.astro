@@ -2,7 +2,7 @@
 interface Props {
   eyebrow: string;
   title: string;
-  description: string;
+  description?: string;
 }
 
 const { eyebrow, title, description } = Astro.props;
@@ -14,12 +14,15 @@ const { eyebrow, title, description } = Astro.props;
       {eyebrow}
     </p>
     <h1
-      class="reveal font-display mt-6 max-w-[20ch] text-4xl font-medium tracking-tight text-balance [--reveal-delay:100ms] sm:text-5xl">
+      class="reveal font-display mt-6 max-w-[22ch] text-4xl leading-tight font-medium tracking-tight text-balance [--reveal-delay:100ms] sm:text-5xl">
       {title}
     </h1>
-    <p
-      class="reveal text-muted-foreground mt-6 max-w-[55ch] text-lg text-pretty [--reveal-delay:200ms]">
-      {description}
-    </p>
+    {
+      description && (
+        <p class="reveal text-muted-foreground mt-6 max-w-[55ch] text-lg text-pretty [--reveal-delay:200ms]">
+          {description}
+        </p>
+      )
+    }
   </div>
 </section>
