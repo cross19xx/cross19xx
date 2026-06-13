@@ -5,17 +5,10 @@ export interface Project {
   link: string;
   status: ProjectStatus;
   summary: string;
-  details: string;
+  details: string[];
   techStack: string[];
   featured: boolean; // Flag to indicated if the project is featured on the homepage
 }
-
-export const statusBadge: Record<ProjectStatus, string> = {
-  'In Progress':
-    'rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-400/10 dark:text-amber-400',
-  Shipped:
-    'rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-400',
-};
 
 export const projects: Project[] = [
   {
@@ -24,8 +17,9 @@ export const projects: Project[] = [
     status: 'In Progress',
     summary:
       'A collection of throwaway projects tackling complex topics in Native Android, Native iOS, and React Native',
-    details:
+    details: [
       'An ever-expanding collection of projects to ensure that I stay sharp on the latest and greatest in mobile development.',
+    ],
     techStack: ['Kotlin', 'Swift', 'React Native'],
     featured: true,
   },
@@ -34,8 +28,9 @@ export const projects: Project[] = [
     link: 'https://www.kwakye-gyamfi.com/celia',
     status: 'In Progress',
     summary: 'Make time for the things that actually matter. Screen blocking with accountability',
-    details:
+    details: [
       'A mobile app for blocking distracting apps and websites. It helps you stay focused on the things that actually matter.',
+    ],
     techStack: ['Kotlin', 'Swift'],
     featured: true,
   },
@@ -44,8 +39,9 @@ export const projects: Project[] = [
     link: 'https://www.howbee.app',
     status: 'Shipped',
     summary: 'Cultivate deeper connections. Track friendships. Never miss a chance to catch-up',
-    details:
+    details: [
       'Mobile app for keeping up to date with friends and loved ones. Get reminded to check in on them based on specified cadences',
+    ],
     techStack: ['React Native'],
     featured: true,
   },
@@ -54,8 +50,9 @@ export const projects: Project[] = [
     link: 'https://www.kwakye-gyamfi.com',
     status: 'Shipped',
     summary: "The site you're reading — an Astro project kept deliberately small:",
-    details:
+    details: [
       "The site you're reading — an Astro project kept deliberately small: markdown posts, typed data files, a handful of components, and no client-side framework. Light and dark themes, a filterable photo archive, and a blog, all statically generated.",
+    ],
     techStack: ['Astro', 'Typescript'],
     featured: false,
   },

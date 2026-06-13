@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 
+import PageIntro from '_/components/PageIntro.astro';
 import PostRow from '_/components/PostRow.astro';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
@@ -24,22 +25,11 @@ const eyebrow = `Notes — ${posts.length} posts, ${years.length} years`;
   title="Writing - Kenneth Kwakye-Gyamfi"
   description="Notes by Kenneth Kwakye-Gyamfi on building software, making pictures, and the places the two overlap">
   <!-- Page Intro -->
-  <section class="pt-20 pb-12 sm:pt-28 sm:pb-16">
-    <div class="mx-auto max-w-5xl px-6 lg:px-8">
-      <p class="reveal text-caption-foreground text-sm tracking-wide uppercase">
-        {eyebrow}
-      </p>
-      <h1
-        class="reveal font-display mt-6 max-w-[20ch] text-4xl font-medium tracking-tight text-balance [--reveal-delay:100ms] sm:text-5xl">
-        Writing
-      </h1>
-      <p
-        class="reveal text-muted-foreground mt-6 max-w-[55ch] text-lg text-pretty [--reveal-delay:200ms]">
-        Notes on building software, making pictures, and the places the two overlap. Written slowly,
-        published occasionally.
-      </p>
-    </div>
-  </section>
+  <PageIntro
+    eyebrow={eyebrow}
+    title="Writing"
+    description="Notes on building software, making pictures, and the places the two overlap. Written slowly, published occasionally."
+  />
 
   <!-- Topic filter -->
   <section class="border-border border-y">

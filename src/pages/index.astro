@@ -4,13 +4,13 @@ import { getCollection } from 'astro:content';
 import { ArrowRightIcon, ExternalLinkIcon } from '@lucide/astro';
 
 import HomeSection from '_/components/HomeSection.astro';
+import PostRow from '_/components/PostRow.astro';
+import ProjectRow from '_/components/ProjectRow.astro';
 import { featured, photoSrc } from '_/data/photos';
-import { projects, statusBadge } from '_/data/projects';
+import { projects } from '_/data/projects';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
-import { monthYear } from '_/utils/date';
 import { padNumber } from '_/utils/misc';
-import PostRow from '_/components/PostRow.astro';
 
 const skills: { name: string; blurb: string }[] = [
   {
@@ -130,28 +130,7 @@ const posts = (await getCollection('blog'))
     description="A bench of ideas in various states of done — some shipping, some still sketches in a notebook."
     link={{ text: 'All Projects', href: '/projects' }}>
     <ul role="list" class="divide-border/50 mt-8 divide-y">
-      {
-        featuredProjects.map((project, i) => (
-          <li class="reveal flex gap-5 py-8">
-            <span class="text-caption-foreground font-mono text-sm">{padNumber(i + 1)}</span>
-            <div class="flex-1">
-              <div class="flex flex-wrap items-center gap-3">
-                <h3 class="text-base font-medium">
-                  <a href={project.link}>{project.name}</a>
-                </h3>
-                <span class={statusBadge[project.status]}>{project.status}</span>
-              </div>
-
-              <p class="text-muted-foreground mt-1.5 max-w-[60ch] text-base text-pretty">
-                {project.summary}
-              </p>
-              <p class="text-caption-foreground mt-3 font-mono text-xs tracking-wide uppercase">
-                {project.techStack.join('  ·  ')}
-              </p>
-            </div>
-          </li>
-        ))
-      }
+      {featuredProjects.map((project, i) => <ProjectRow project={project} index={i} />)}
     </ul>
   </HomeSection>
 

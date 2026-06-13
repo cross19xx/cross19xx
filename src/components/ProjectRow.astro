@@ -1,0 +1,38 @@
+---
+import type { Project, ProjectStatus } from '_/data/projects';
+import { padNumber } from '_/utils/misc';
+
+interface Props {
+  project: Project;
+  index: number;
+  class?: string;
+}
+
+const { project, index, class: className } = Astro.props;
+
+const statusBadge: Record<ProjectStatus, string> = {
+  'In Progress':
+    'rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-400/10 dark:text-amber-400',
+  Shipped:
+    'rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-400',
+};
+---
+
+<li class:list={['reveal flex gap-5 py-8', className]}>
+  <span class="text-caption-foreground font-mono text-sm">{padNumber(index + 1)}</span>
+  <div class="flex-1">
+    <div class="flex flex-wrap items-center gap-3">
+      <h3 class="text-base font-medium hover:underline">
+        <a href={project.link}>{project.name}</a>
+      </h3>
+      <span class={statusBadge[project.status]}>{project.status}</span>
+    </div>
+
+    <p class="text-muted-foreground mt-1.5 max-w-[60ch] text-base text-pretty">
+      {project.summary}
+    </p>
+    <p class="text-caption-foreground mt-3 font-mono text-xs tracking-wide uppercase">
+      {project.techStack.join('  ·  ')}
+    </p>
+  </div>
+</li>

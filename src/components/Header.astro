@@ -1,4 +1,6 @@
 ---
+import { EMAIL } from '_/data/site';
+
 const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
@@ -8,7 +10,7 @@ const navLinks = [
 ];
 
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
-const contactHref = path === '/' ? '#contact' : 'mailto:kenneth.cross95@gmail.com';
+const contactHref = path === '/' ? '#contact' : `mailto:${EMAIL}`;
 
 const isActive = (href: string) => {
   const base = href || '/';
