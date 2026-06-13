@@ -32,22 +32,13 @@
 
 @utility inline-link {
   font-weight: var(--font-weight-medium);
-  color: var(--color-neutral-950);
+  color: var(--color-foreground);
   text-decoration-line: underline;
-  text-decoration-color: var(--color-neutral-300);
+  text-decoration-color: var(--color-border);
   text-underline-offset: 4px;
 
   @variant hover {
-    text-decoration-color: var(--color-neutral-950);
-  }
-
-  @variant dark {
-    color: var(--color-white);
-    text-decoration-color: var(--color-neutral-600);
-
-    @variant hover {
-      text-decoration-color: var(--color-white);
-    }
+    text-decoration-color: var(--color-foreground);
   }
 }
 
@@ -129,11 +120,7 @@
 .prose {
   font-size: var(--text-base);
   line-height: --spacing(7);
-  color: var(--color-neutral-600);
-
-  @variant dark {
-    color: var(--color-neutral-400);
-  }
+  color: var(--color-muted-foreground);
 
   & * + * {
     margin-top: --spacing(5);
@@ -145,11 +132,7 @@
     line-height: var(--text-xl--line-height);
     font-weight: var(--font-weight-semibold);
     letter-spacing: -0.025em;
-    color: var(--color-neutral-950);
-
-    @variant dark {
-      color: var(--color-white);
-    }
+    color: var(--color-foreground);
   }
 
   & h3 {
@@ -157,41 +140,24 @@
     font-size: var(--text-lg);
     line-height: var(--text-lg--line-height);
     font-weight: var(--font-weight-medium);
-    color: var(--color-neutral-950);
-
-    @variant dark {
-      color: var(--color-white);
-    }
+    color: var(--color-foreground);
   }
 
   & a {
     font-weight: var(--font-weight-medium);
-    color: var(--color-neutral-950);
+    color: var(--color-foreground);
     text-decoration-line: underline;
-    text-decoration-color: var(--color-neutral-300);
+    text-decoration-color: var(--color-border);
     text-underline-offset: 4px;
 
     @variant hover {
-      text-decoration-color: var(--color-neutral-950);
-    }
-
-    @variant dark {
-      color: var(--color-white);
-      text-decoration-color: var(--color-neutral-600);
-
-      @variant hover {
-        text-decoration-color: var(--color-white);
-      }
+      text-decoration-color: var(--color-foreground);
     }
   }
 
   & strong {
     font-weight: var(--font-weight-semibold);
-    color: var(--color-neutral-950);
-
-    @variant dark {
-      color: var(--color-white);
-    }
+    color: var(--color-foreground);
   }
 
   & ul {
@@ -212,11 +178,7 @@
   & code {
     font-family: var(--font-mono);
     font-size: var(--text-sm);
-    color: var(--color-neutral-950);
-
-    @variant dark {
-      color: var(--color-white);
-    }
+    color: var(--color-foreground);
   }
 
   /* !important beats Shiki's inline theme background so the site's
@@ -226,32 +188,19 @@
     margin-top: --spacing(6);
     overflow-x: auto;
     border-radius: var(--radius-lg);
-    background-color: var(--color-neutral-950) !important;
+    background-color: oklch(0.205 0 0) !important;
     padding: --spacing(5);
-
-    @variant dark {
-      background-color: --alpha(var(--color-white) / 5%) !important;
-      box-shadow: inset 0 0 0 1px --alpha(var(--color-white) / 10%);
-    }
   }
 
   & pre code {
-    color: var(--color-neutral-200);
-
-    @variant dark {
-      color: var(--color-neutral-300);
-    }
+    color: var(--color-caption-foreground);
   }
 
   & blockquote {
     margin-top: --spacing(6);
-    border-left: 2px solid var(--color-neutral-200);
+    border-left: 2px solid var(--color-border);
     padding-left: --spacing(5);
     font-style: italic;
-
-    @variant dark {
-      border-left-color: var(--color-neutral-700);
-    }
   }
 
   & figure {
@@ -268,6 +217,6 @@
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     line-height: var(--text-xs--line-height);
-    color: var(--color-neutral-500);
+    color: var(--color-muted-foreground);
   }
 }
