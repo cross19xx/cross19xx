@@ -5,7 +5,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/astro';
 
 import BaseLayout from '_/layouts/Base.astro';
 import { fullDate } from '_/utils/date';
-import { constructPageTitle, topicLabel } from '_/utils/misc';
+import { constructPageTitle } from '_/utils/misc';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -55,7 +55,7 @@ const navLink =
         >
         <p
           class="reveal text-caption-foreground mt-10 font-mono text-sm tracking-wide uppercase [--reveal-delay:100ms]">
-          {articleDate} · {post.data.readingTime} min · {topicLabel(post.data.topic)}
+          {articleDate} · {post.data.readingTime} min · {post.data.topic}
         </p>
         <h1
           class="reveal font-display mt-6 max-w-[26ch] text-4xl font-medium tracking-tight text-pretty [--reveal-delay:200ms] sm:text-5xl">
@@ -84,7 +84,7 @@ const navLink =
       {
         older ? (
           <a href={`/posts/${older.id}`} class="group max-w-[45%]">
-            <span class="text-caption-foreground font-mono text-xs tracking-wide uppercase">
+            <span class="text-caption-foreground inline-flex items-center gap-2 font-mono text-xs tracking-wide uppercase">
               <ArrowLeftIcon class="size-3" /> Older
             </span>
             <span class={navLink}>{older.data.title}</span>
@@ -98,7 +98,7 @@ const navLink =
       {
         newer ? (
           <a href={`/posts/${newer.id}`} class="group max-w-[45%] text-right">
-            <span class="text-caption-foreground font-mono text-xs tracking-wide uppercase">
+            <span class="text-caption-foreground inline-flex items-center gap-2 font-mono text-xs tracking-wide uppercase">
               Newer <ArrowRightIcon class="size-3" />
             </span>
             <span class={navLink}>{newer.data.title}</span>

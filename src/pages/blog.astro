@@ -14,11 +14,7 @@ const posts = (await getCollection('blog')).sort(
 const years = [...new Set(posts.map((p) => p.data.date.getUTCFullYear()))];
 const byYear = (year: number) => posts.filter((p) => p.data.date.getUTCFullYear() === year);
 
-const topics = [
-  { value: 'all', label: 'All' },
-  { value: 'engineering', label: 'Engineering' },
-  { value: 'photography', label: 'Photography' },
-];
+const topics = ['All', 'Engineering', 'Photography', 'Life'];
 const eyebrow = `Notes — ${posts.length} posts, ${years.length} years`;
 ---
 
@@ -33,26 +29,28 @@ const eyebrow = `Notes — ${posts.length} posts, ${years.length} years`;
   />
 
   <!-- Topic filter -->
-  <section class="border-border border-y">
-    <div class="mx-auto max-w-5xl px-6 py-4 lg:px-8">
-      <div
-        class="reveal flex flex-wrap items-center gap-2"
-        role="group"
-        aria-label="Filter posts by topic">
-        {
-          topics.map((topic) => (
-            <button
-              type="button"
-              data-topic-filter={topic.value}
-              aria-pressed={topic.value === 'all' ? 'true' : 'false'}
-              class="text-muted-foreground inset-ring-border hover:text-foreground aria-pressed:bg-foreground aria-pressed:text-background rounded-md px-3.5 py-1.5 text-sm inset-ring aria-pressed:font-medium aria-pressed:inset-ring-0">
-              {topic.label}
-            </button>
-          ))
-        }
-      </div>
-    </div>
-  </section>
+  {
+    posts.length > 0 && (
+      <section class="border-border border-y">
+        <div class="mx-auto max-w-5xl px-6 py-4 lg:px-8">
+          <div
+            class="reveal flex flex-wrap items-center gap-2"
+            role="group"
+            aria-label="Filter posts by topic">
+            {topics.map((topic) => (
+              <button
+                type="button"
+                data-topic-filter={topic}
+                aria-pressed={topic === 'All' ? 'true' : 'false'}
+                class="text-muted-foreground inset-ring-border hover:text-foreground aria-pressed:bg-foreground aria-pressed:text-background rounded-md px-3.5 py-1.5 text-sm inset-ring aria-pressed:font-medium aria-pressed:inset-ring-0">
+                {topic}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <!-- Posts by year -->
   <section class="py-16 sm:py-20">
@@ -73,6 +71,15 @@ const eyebrow = `Notes — ${posts.length} posts, ${years.length} years`;
           </section>
         ))
       }
+
+      <!-- Empty state -->
+      <p data-empty hidden={posts.length > 0} class="text-caption-foreground font-mono text-sm">
+        {
+          posts.length === 0
+            ? 'Nothing here yet — the first note is on its way.'
+            : 'No notes under that topic yet — try another one.'
+        }
+      </p>
     </div>
   </section>
 
@@ -103,13 +110,18 @@ const eyebrow = `Notes — ${posts.length} posts, ${years.length} years`;
         pill.setAttribute('aria-pressed', String(pill.dataset.topicFilter === topic));
       });
       document.querySelectorAll<HTMLElement>('[data-topic]').forEach((row) => {
-        row.hidden = topic !== 'all' && row.dataset.topic !== topic;
+        row.hidden = topic !== 'All' && row.dataset.topic !== topic;
       });
+      let anyVisible = false;
       document.querySelectorAll<HTMLElement>('[data-year-group]').forEach((group) => {
-        group.hidden = ![...group.querySelectorAll<HTMLElement>('[data-topic]')].some(
+        const groupVisible = [...group.querySelectorAll<HTMLElement>('[data-topic]')].some(
           (row) => !row.hidden,
         );
+        group.hidden = !groupVisible;
+        if (groupVisible) anyVisible = true;
       });
+      const empty = document.querySelector<HTMLElement>('[data-empty]');
+      if (empty) empty.hidden = anyVisible;
     }
 
     document.addEventListener('click', (event) => {

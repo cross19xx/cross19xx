@@ -6,14 +6,14 @@ import { glob } from 'astro/loaders';
 import { turso } from './turso';
 
 const blog = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
     lede: z.string(),
     date: z.coerce.date(),
     readingTime: z.number(),
-    topic: z.enum(['engineering', 'photography']),
+    topic: z.enum(['Engineering', 'Photography', 'Life']),
   }),
 });
 

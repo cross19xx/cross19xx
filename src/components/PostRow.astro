@@ -4,7 +4,6 @@ import type { CollectionEntry } from 'astro:content';
 import { ArrowRightIcon } from '@lucide/astro';
 
 import { monthYear } from '_/utils/date';
-import { topicLabel } from '_/utils/misc';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -26,7 +25,7 @@ const { post } = Astro.props;
       {post.data.description}
     </span>
     <span class="text-caption-foreground mt-3 block font-mono text-xs tracking-wide uppercase">
-      {post.data.readingTime} min · {topicLabel(post.data.topic)}
+      {post.data.readingTime} min · {post.data.topic}
     </span>
   </span>
 

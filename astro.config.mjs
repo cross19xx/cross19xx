@@ -1,3 +1,4 @@
+import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, fontProviders } from 'astro/config';
@@ -45,7 +46,7 @@ export default defineConfig({
       'ro5duieh0n6tvtsi.public.blob.vercel-storage.com',
     ],
   },
-  integrations: [sitemap(), tailwindcss()],
+  integrations: [sitemap(), mdx(), tailwindcss()],
   markdown: {
     shikiConfig: {
       theme: 'dracula',

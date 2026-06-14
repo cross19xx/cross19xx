@@ -4,7 +4,7 @@ description: 'Learn how to bring Siri-powered App Intents into an Expo app by br
 lede: 'What happens when you want Siri to understand data that lives inside your Expo app? This article breaks down how I added iOS App Intents to a React Native/Expo project, from sharing dynamic data with Swift to wiring everything into the native iOS build.'
 date: 2026-03-28
 readingTime: 10
-topic: engineering
+topic: Engineering
 ---
 
 If you've ever used an Apple device with Siri installed, you've, at one point or another, used Siri (unless you haven't, then I tip my hat to you)
