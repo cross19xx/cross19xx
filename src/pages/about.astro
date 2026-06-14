@@ -7,9 +7,9 @@ import portrait from '_/assets/img/2I2A8044.jpg';
 import PageIntro from '_/components/PageIntro.astro';
 import { WORK_EXPERIENCES } from '_/data/experiences';
 import BaseLayout from '_/layouts/Base.astro';
-import { blobUrl } from '_/utils/misc';
+import { blobUrl, constructPageTitle } from '_/utils/misc';
 
-const pageTitle = 'About — Kenneth Kwakye-Gyamfi';
+const pageTitle = constructPageTitle('About');
 const pageDescription =
   'About Kenneth Kwakye-Gyamfi — full stack mobile and web developer and photographer based in Accra, Ghana.';
 const bio = [

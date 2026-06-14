@@ -4,12 +4,13 @@ import ProjectRow from '_/components/ProjectRow.astro';
 import { projects } from '_/data/projects';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
+import { constructPageTitle } from '_/utils/misc';
 
 const eyebrow = `Bench — ${projects.length} projects, 3 states of done`;
 ---
 
 <BaseLayout
-  title="Projects — Kenneth Kwakye-Gyamfi"
+  title={constructPageTitle('Projects')}
   description="Projects by Kenneth Kwakye-Gyamfi — apps, tools, and ideas in various states of done.">
   <PageIntro
     eyebrow={eyebrow}

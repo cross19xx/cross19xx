@@ -1,5 +1,7 @@
 export const EMAIL = 'kenneth.cross95@gmail.com';
 
+export const SITE_NAME = 'Kenneth Kwakye-Gyamfi';
+
 export const SOCIAL_MEDIA = [
   { label: 'GitHub', href: 'https://www.github.com/cross19xx' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/kenneth-kwakye-gyamfi' },

@@ -5,6 +5,7 @@ import PageIntro from '_/components/PageIntro.astro';
 import PostRow from '_/components/PostRow.astro';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
+import { constructPageTitle } from '_/utils/misc';
 
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -22,7 +23,7 @@ const eyebrow = `Notes — ${posts.length} posts, ${years.length} years`;
 ---
 
 <BaseLayout
-  title="Writing - Kenneth Kwakye-Gyamfi"
+  title={constructPageTitle('Writing')}
   description="Notes by Kenneth Kwakye-Gyamfi on building software, making pictures, and the places the two overlap">
   <!-- Page Intro -->
   <PageIntro

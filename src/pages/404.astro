@@ -2,9 +2,10 @@
 import { ArrowRightIcon } from '@lucide/astro';
 
 import BaseLayout from '_/layouts/Base.astro';
+import { constructPageTitle } from '_/utils/misc';
 ---
 
-<BaseLayout title="404 - Kenneth Kwakye-Gyamfi" description="Page not found">
+<BaseLayout title={constructPageTitle('404')} description="Page not found">
   <section class="min-h-[calc(100dvh-11.5rem)] pt-24 pb-20 sm:pt-32 sm:pb-28">
     <div class="mx-auto max-w-3xl px-6">
       <p class="reveal text-caption-foreground font-mono text-sm tracking-wide uppercase">

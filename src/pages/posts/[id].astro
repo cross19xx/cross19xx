@@ -5,7 +5,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@lucide/astro';
 
 import BaseLayout from '_/layouts/Base.astro';
 import { fullDate } from '_/utils/date';
-import { topicLabel } from '_/utils/misc';
+import { constructPageTitle, topicLabel } from '_/utils/misc';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -36,7 +36,7 @@ export async function getStaticPaths() {
 
 const { post, older, newer } = Astro.props;
 const { Content } = await render(post);
-const title = `${post.data.title} - Kenneth Kwakye-Gyamfi`;
+const title = constructPageTitle(post.data.title);
 const articleDate = fullDate(post.data.date);
 
 const navLink =

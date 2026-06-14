@@ -5,7 +5,7 @@ import { type CollectionEntry, getCollection } from 'astro:content';
 import Lightbox from '_/components/Lightbox.astro';
 import PageIntro from '_/components/PageIntro.astro';
 import BaseLayout from '_/layouts/Base.astro';
-import { MASONRY_BREAKPOINTS } from '_/utils/misc';
+import { constructPageTitle, MASONRY_BREAKPOINTS } from '_/utils/misc';
 
 import { Masonry } from 'astro-masonry';
 
@@ -36,8 +36,8 @@ export async function getStaticPaths() {
 }
 
 const { album, photos } = Astro.props;
-const pageTitle = `${album.data.title} - Kenneth Kwakye-Gyamfi`;
-const pageDescription = album.data.description;
+const pageTitle = constructPageTitle(album.data.title);
+const pageDescription = `${album.data.title} - ${album.data.description}`;
 
 const chipClass =
   'tag-chip text-muted-foreground inset-ring inset-ring-border/50 hover:text-foreground';

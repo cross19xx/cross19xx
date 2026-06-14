@@ -2,8 +2,9 @@
 import PageIntro from '_/components/PageIntro.astro';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
+import { constructPageTitle } from '_/utils/misc';
 
-const pageTitle = 'Uses - Kenneth Kwakye-Gyamfi';
+const pageTitle = constructPageTitle('Uses');
 const pageDescription =
   'The hardware, software, and camera gear Kenneth Kwakye-Gyamfi actually uses';
 

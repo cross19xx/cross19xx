@@ -6,7 +6,7 @@ import Lightbox from '_/components/Lightbox.astro';
 import PageIntro from '_/components/PageIntro.astro';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
-import { MASONRY_BREAKPOINTS } from '_/utils/misc';
+import { constructPageTitle, MASONRY_BREAKPOINTS } from '_/utils/misc';
 
 import { Masonry } from 'astro-masonry';
 
@@ -39,7 +39,7 @@ const mappedAlbums: MappedAlbum[] = albums.map((album) => {
   };
 });
 
-const pageTitle = 'Photography — Kenneth Kwakye-Gyamfi';
+const pageTitle = constructPageTitle('Photography');
 const pageDescription =
   'Photography archive of Kenneth Kwakye-Gyamfi — albums from Accra, the Ghanaian coast, and beyond.';
 const eyebrow = `Archive — ${photos.length} photos, ${albums.length} albums`;
