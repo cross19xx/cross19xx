@@ -4,6 +4,7 @@ import { getCollection, type InferEntrySchema } from 'astro:content';
 
 import Lightbox from '_/components/Lightbox.astro';
 import PageIntro from '_/components/PageIntro.astro';
+import { PAGE_META } from '_/data/pages';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
 import { constructPageTitle, MASONRY_BREAKPOINTS } from '_/utils/misc';
@@ -39,9 +40,7 @@ const mappedAlbums: MappedAlbum[] = albums.map((album) => {
   };
 });
 
-const pageTitle = constructPageTitle('Photography');
-const pageDescription =
-  'Photography archive of Kenneth Kwakye-Gyamfi — albums from Accra, the Ghanaian coast, and beyond.';
+const { title, description: pageDescription } = PAGE_META['/photography'];
 const eyebrow = `Archive — ${photos.length} photos, ${albums.length} albums`;
 
 const pillClass =
@@ -50,7 +49,7 @@ const chipClass =
   'tag-chip text-muted-foreground inset-ring inset-ring-border/50 hover:text-foreground';
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<BaseLayout title={constructPageTitle(title)} description={pageDescription}>
   <PageIntro
     eyebrow={eyebrow}
     title="Photographs"

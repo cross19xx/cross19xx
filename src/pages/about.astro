@@ -6,19 +6,18 @@ import { ArrowRightIcon } from '@lucide/astro';
 import portrait from '_/assets/img/2I2A8044.jpg';
 import PageIntro from '_/components/PageIntro.astro';
 import { WORK_EXPERIENCES } from '_/data/experiences';
+import { PAGE_META } from '_/data/pages';
 import BaseLayout from '_/layouts/Base.astro';
 import { blobUrl, constructPageTitle } from '_/utils/misc';
 
-const pageTitle = constructPageTitle('About');
-const pageDescription =
-  'About Kenneth Kwakye-Gyamfi — full stack mobile and web developer and photographer based in Accra, Ghana.';
+const { title, description: pageDescription } = PAGE_META['/about'];
 const bio = [
   "I'm Kenneth — a senior full stack mobile and web developer currently based in Accra, Ghana. My work spans the whole lifecycle of a product: wireframing the first screens, building the apps people hold, and running the backends behind them.",
   'When I\'m not shipping software, I\'m out with my trusted <a href="/uses" class="inline-link">Sony A7 IV</a>. Photography taught me to pay attention to light, framing, and timing — the same instincts that make an interface feel right. The two practices feed each other more than they compete. As an example, the flexibility of a zoom lens broadly shaped how I choose tech stacks.',
 ];
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<BaseLayout title={constructPageTitle(title)} description={pageDescription}>
   <PageIntro eyebrow="Person — Accra, Ghana" title="Developer by trade, photographer by desire." />
 
   <!-- Bio -->

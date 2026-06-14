@@ -3,10 +3,12 @@ import { getCollection } from 'astro:content';
 
 import PageIntro from '_/components/PageIntro.astro';
 import PostRow from '_/components/PostRow.astro';
+import { PAGE_META } from '_/data/pages';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
 import { constructPageTitle } from '_/utils/misc';
 
+const { title, description: pageDescription } = PAGE_META['/blog'];
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
@@ -18,9 +20,7 @@ const topics = ['All', 'Engineering', 'Photography', 'Life'];
 const eyebrow = `Notes — ${posts.length} posts, ${years.length} years`;
 ---
 
-<BaseLayout
-  title={constructPageTitle('Writing')}
-  description="Notes by Kenneth Kwakye-Gyamfi on building software, making pictures, life and the places they overlap. Written slowly, published occasionally. Written by hand, no AI">
+<BaseLayout title={constructPageTitle(title)} description={pageDescription}>
   <!-- Page Intro -->
   <PageIntro
     eyebrow={eyebrow}

@@ -1,12 +1,11 @@
 ---
 import PageIntro from '_/components/PageIntro.astro';
+import { PAGE_META } from '_/data/pages';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
 import { constructPageTitle } from '_/utils/misc';
 
-const pageTitle = constructPageTitle('Uses');
-const pageDescription =
-  'The hardware, software, and camera gear Kenneth Kwakye-Gyamfi actually uses';
+const { title, description: pageDescription } = PAGE_META['/uses'];
 
 const sections = [
   {
@@ -55,7 +54,7 @@ const sections = [
 ];
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<BaseLayout title={constructPageTitle(title)} description={pageDescription}>
   <PageIntro
     eyebrow="Inventory — updated Jun 2026"
     title="Uses"

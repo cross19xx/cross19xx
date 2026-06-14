@@ -34,7 +34,7 @@ export const PAGE_META = {
   },
   '/blog': {
     title: 'Writing',
-    description: 'Notes on building software, making pictures, and the places the two overlap.',
+    description: 'Notes on building software, making pictures, life and the places they overlap.',
   },
   '/uses': {
     title: 'Uses',

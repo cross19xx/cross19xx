@@ -1,17 +1,17 @@
 ---
 import PageIntro from '_/components/PageIntro.astro';
 import ProjectRow from '_/components/ProjectRow.astro';
+import { PAGE_META } from '_/data/pages';
 import { projects } from '_/data/projects';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
 import { constructPageTitle } from '_/utils/misc';
 
 const eyebrow = `Bench — ${projects.length} projects, 3 states of done`;
+const { title, description: pageDescription } = PAGE_META['/projects'];
 ---
 
-<BaseLayout
-  title={constructPageTitle('Projects')}
-  description="Projects by Kenneth Kwakye-Gyamfi — apps, tools, and ideas in various states of done.">
+<BaseLayout title={constructPageTitle(title)} description={pageDescription}>
   <PageIntro
     eyebrow={eyebrow}
     description="Projects by Kenneth Kwakye-Gyamfi — apps, tools, and ideas in various states of done."
