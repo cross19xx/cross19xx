@@ -38,9 +38,6 @@ export async function getStaticPaths() {
 const { album, photos } = Astro.props;
 const pageTitle = constructPageTitle(album.data.title);
 const pageDescription = `${album.data.title} - ${album.data.description}`;
-
-const chipClass =
-  'tag-chip text-muted-foreground inset-ring inset-ring-border/50 hover:text-foreground';
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
@@ -82,9 +79,9 @@ const chipClass =
                 <p class="text-caption-foreground font-mono text-xs">{photo.exif}</p>
                 <div class="flex flex-wrap gap-1.5">
                   {photo.tags.map((tag) => (
-                    <button type="button" data-tag={tag} class={chipClass}>
+                    <p class="tag-chip text-muted-foreground inset-ring-border/50 hover:text-foreground inset-ring">
                       {tag}
-                    </button>
+                    </p>
                   ))}
                 </div>
               </figcaption>
