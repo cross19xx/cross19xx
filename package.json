@@ -22,6 +22,8 @@
     "@libsql/client": "^0.17.3",
     "@lucide/astro": "^1.18.0",
     "@tailwindcss/vite": "^4.0.0",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "astro": "^6.4.6",
     "astro-masonry": "^1.2.2",
     "sharp": "^0.35.1",

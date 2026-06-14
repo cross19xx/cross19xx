@@ -1,5 +1,7 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
 
 import BaseHead from '_/components/BaseHead.astro';
 import Footer from '_/components/Footer.astro';
@@ -28,6 +30,9 @@ const { description, title, image } = Astro.props;
       <slot />
       <Footer />
     </div>
+
+    <Analytics />
+    <SpeedInsights />
 
     <script>
       // The ClientRouter swaps the DOM on navigation, so all element wiring
