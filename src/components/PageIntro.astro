@@ -19,9 +19,10 @@ const { eyebrow, title, description } = Astro.props;
     </h1>
     {
       description && (
-        <p class="reveal text-muted-foreground mt-6 max-w-[55ch] text-lg text-pretty [--reveal-delay:200ms]">
-          {description}
-        </p>
+        <p
+          class="reveal text-muted-foreground mt-6 max-w-[55ch] text-lg text-pretty [--reveal-delay:200ms]"
+          set:html={description}
+        />
       )
     }
   </div>

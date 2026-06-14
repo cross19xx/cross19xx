@@ -210,7 +210,7 @@ struct ContactEntityQuery: EntityStringQuery {
 }
 ```
 
-The `EntityStringQuery` protocol is what makes Siri smart about your data. When a user says "Check in with **Mom** in Howbee", Siri uses `entities(matching:)` to resolve "Mom" to a `ContactEntity`. And `suggestedEntities()` powers the autocomplete list when the user taps the parameter in the Shortcuts app.
+The `EntityStringQuery` protocol is what makes Siri smart about your data. When a user says "Check in with **Mum** in Howbee", Siri uses `entities(matching:)` to resolve "Mum" to a `ContactEntity`. And `suggestedEntities()` powers the autocomplete list when the user taps the parameter in the Shortcuts app.
 
 ### Intent 1: Add a new contact (the simple one)
 
@@ -540,7 +540,7 @@ const SiriSyncHandler: React.FC = () => {
 
 Drop this component somewhere near the root of your app, and every time your contacts change, Siri's data store gets updated. The `setSharedData` call also triggers `updateShortcutParameters()` on the native side, so Siri immediately knows about new or removed contacts.
 
-Your database doesn't have to be Realm — the pattern works the same with any data source. Just serialize your data to JSON and call `setSharedData`.
+Your database doesn't have to be Realm — the pattern works the same with any data source. Just serialise your data to JSON and call `setSharedData`.
 
 ## Step 6: Handle deep links back
 
@@ -598,7 +598,7 @@ modules/howbee-intents/
     └── ...                             ← No-op stub
 ```
 
-## Gotchas and things I learned
+## Gotchas and things I learnt
 
 - **The Swift files must be in the main app target**, not in the Expo module's pod. App Intents only work when compiled as part of the main app. That's why we copy them during prebuild instead of putting them in the `ios/` folder of the module.
 - **`NSClassFromString` is the bridge trick.** Because the Expo module is a separate pod, it can't `import` the `HowbeeShortcutsHelper` class directly. The ObjC runtime lookup is the cleanest way to call across that boundary.
