@@ -37,7 +37,7 @@ const skills: { name: string; blurb: string }[] = [
   },
   {
     name: 'Web Development',
-    blurb: 'Fast, accessible web apps and sites — from marketing pages to full product frontends.',
+    blurb: 'Fast, accessible web apps and sites — from marketing pages to full product frontend.',
   },
   {
     name: 'Desktop applications',
@@ -139,58 +139,49 @@ const posts = (await getCollection('blog'))
   </HomeSection>
 
   <!-- Photography -->
-  <section
+  <HomeSection
     id="photography"
-    class="bg-neutral-950 py-20 text-white sm:py-28 dark:border-y dark:border-white/10">
-    <div class="mx-auto max-w-5xl px-6 lg:px-8">
-      <div class="reveal flex items-baseline justify-between gap-6">
-        <h2 class="text-2xl font-semibold tracking-tight">Photography</h2>
-        <p class="font-mono text-sm tracking-wide text-neutral-500 uppercase">03 / Field Notes</p>
-      </div>
-      <p class="reveal mt-4 max-w-[55ch] text-base text-pretty text-neutral-400">
-        Code is how I make a living; photographs are how I keep looking. A rolling selection of
-        frames from Accra and wherever the road goes.
-      </p>
+    title="Photography"
+    eyebrow="03 / Field Notes"
+    description="Code is how I make a living; photographs are how I keep looking. A rolling selection of frames from Accra and wherever the road goes.">
+    <Masonry breakpointCols={MASONRY_BREAKPOINTS} class="mt-12 gap-4">
+      {
+        featuredPhotos.map(({ photo, aspect, delay }) => (
+          <figure class={`reveal mb-4 break-inside-avoid sm:mb-5 ${delay ?? ''}`}>
+            <a
+              href="/photography"
+              class="group block overflow-hidden rounded-sm outline-1 -outline-offset-1 outline-white/10">
+              <Image
+                src={photo.url}
+                inferSize
+                alt={photo.alt}
+                loading="lazy"
+                class={`${aspect} w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105`}
+              />
+            </a>
+            <figcaption class="mt-2 flex justify-between font-mono text-xs text-neutral-500">
+              <span>{photo.title}</span>
+              <span>{photo.file}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </Masonry>
 
-      <Masonry breakpointCols={MASONRY_BREAKPOINTS} class="mt-12 gap-4">
-        {
-          featuredPhotos.map(({ photo, aspect, delay }) => (
-            <figure class={`reveal mb-4 break-inside-avoid sm:mb-5 ${delay ?? ''}`}>
-              <a
-                href="/photography"
-                class="group block overflow-hidden rounded-sm outline-1 -outline-offset-1 outline-white/10">
-                <Image
-                  src={photo.url}
-                  inferSize
-                  alt={photo.alt}
-                  loading="lazy"
-                  class={`${aspect} w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105`}
-                />
-              </a>
-              <figcaption class="mt-2 flex justify-between font-mono text-xs text-neutral-500">
-                <span>{photo.title}</span>
-                <span>{photo.file}</span>
-              </figcaption>
-            </figure>
-          ))
-        }
-      </Masonry>
-
-      <div class="reveal mt-10 flex flex-wrap items-center gap-6">
-        <a
-          href="/photography"
-          class="inline-flex items-center gap-2 rounded-md bg-white px-5 py-2.5 text-sm font-medium text-neutral-950 transition-transform hover:bg-neutral-200 active:scale-98">
-          Browse full archive <ArrowRightIcon class="size-3" />
-        </a>
-        <a
-          href="https://www.instagram.com/kenneth_kwakyegyamfi"
-          class="inline-flex items-center gap-2 text-sm font-medium text-neutral-400 hover:text-white"
-          target="_blank">
-          Instagram <ExternalLinkIcon class="size-3" />
-        </a>
-      </div>
+    <div class="reveal mt-10 flex flex-wrap items-center gap-6">
+      <a
+        href="/photography"
+        class="bg-primary text-primary-foreground/90 hover:text-primary-foreground inline-flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-medium transition-transform active:scale-98">
+        Browse full archive <ArrowRightIcon class="size-3" />
+      </a>
+      <a
+        href="https://www.instagram.com/kenneth_kwakyegyamfi"
+        class="text-foreground/90 hover:text-foreground inline-flex items-center gap-2 text-sm font-medium"
+        target="_blank">
+        Instagram <ExternalLinkIcon class="size-3" />
+      </a>
     </div>
-  </section>
+  </HomeSection>
 
   <!-- Blog/Writing -->
   <HomeSection

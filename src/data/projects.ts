@@ -1,4 +1,4 @@
-export type ProjectStatus = 'In Progress' | 'Shipped';
+export type ProjectStatus = 'In Progress' | 'Shipped' | 'Concept';
 
 export interface Project {
   name: string;
@@ -26,7 +26,7 @@ export const projects: Project[] = [
   {
     name: 'Celia',
     link: 'https://www.kwakye-gyamfi.com/celia',
-    status: 'In Progress',
+    status: 'Concept',
     summary: 'Make time for the things that actually matter. Screen blocking with accountability',
     details: [
       'A mobile app for blocking distracting apps and websites. It helps you stay focused on the things that actually matter.',
