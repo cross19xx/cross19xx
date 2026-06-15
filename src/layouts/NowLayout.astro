@@ -1,0 +1,40 @@
+---
+import { CalendarIcon } from '@lucide/astro';
+
+import PageIntro from '_/components/PageIntro.astro';
+import BaseLayout from '_/layouts/Base.astro';
+import { constructPageTitle } from '_/utils/misc';
+
+import dayjs from 'dayjs';
+
+const { frontmatter } = Astro.props;
+const { description, updated } = frontmatter;
+
+const updateDate = dayjs(updated).format('MMMM D, YYYY');
+---
+
+<BaseLayout title={constructPageTitle('Now')} description="What is Kenneth currently up to?">
+  <PageIntro eyebrow="01 / A Snapshot" title="Now" description={description} />
+
+  <div class="border-border border-t py-12 sm:py-16">
+    <div class="mx-auto max-w-5xl px-6 lg:px-8">
+      <div class="text-muted-foreground flex flex-row items-center gap-2 text-sm">
+        <CalendarIcon class="size-3" />
+        <p><span class="font-medium">Last updated:</span> {updateDate}</p>
+      </div>
+
+      <div class="prose max-w-[65ch]">
+        <blockquote class="mb-12">
+          The concept of a "now page" was initiated by <a
+            href="https://sive.rs"
+            target="_blank"
+            rel="noopener noreferrer">Derek Sivers</a
+          > in 2015. The idea is simple: whereas an "About" page provides general information about the
+          me, the "Now" page gives details about what is currently happening in my life at that moment.
+        </blockquote>
+
+        <slot />
+      </div>
+    </div>
+  </div>
+</BaseLayout>
