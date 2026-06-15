@@ -1,0 +1,532 @@
+---
+import '_/styles/heatmap.css';
+
+import antigravityIcon from '_/assets/icons/antigravity.svg?raw';
+import anthropicIcon from '_/assets/icons/claude.svg?raw';
+import geminiIcon from '_/assets/icons/gemini.svg?raw';
+import glmIcon from '_/assets/icons/glm.svg?raw';
+import kimiIcon from '_/assets/icons/kimi.svg?raw';
+import openaiIcon from '_/assets/icons/openai.svg?raw';
+
+import type { DailyUsage, UsageData } from '_/types/usage';
+import { createLocalDate, getWeekIndex, getWeekStart, toDateString } from '_/utils/date';
+
+interface Props {
+  usage: UsageData;
+}
+
+const createEmptyDay = (period: string): DailyUsage => ({
+  agent: 'none',
+  cacheCreationTokens: 0,
+  cacheReadTokens: 0,
+  inputTokens: 0,
+  metadata: {
+    agents: [],
+  },
+  modelBreakdowns: [],
+  modelsUsed: [],
+  outputTokens: 0,
+  period,
+  totalCost: 0,
+  totalTokens: 0,
+});
+
+const getIntensity = (cost: number) => {
+  if (cost <= 0) return 0;
+
+  const ratio = cost / maxCost;
+
+  if (ratio <= 0.1) return 1;
+  if (ratio <= 0.25) return 2;
+  if (ratio <= 0.5) return 3;
+  return 4;
+};
+
+const { usage } = Astro.props;
+const rawDaily = [...(usage?.daily ?? [])].sort((a, b) => a.period.localeCompare(b.period));
+
+const usageByDate = new Map(rawDaily.map((day) => [day.period, day]));
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const twelveMonthsAgo = new Date(today);
+twelveMonthsAgo.setFullYear(today.getFullYear() - 1);
+
+const startDate = getWeekStart(twelveMonthsAgo);
+
+const calendarDays: DailyUsage[] = [];
+
+for (const date = new Date(startDate); date <= today; date.setDate(date.getDate() + 1)) {
+  const period = toDateString(date);
+  calendarDays.push(usageByDate.get(period) ?? createEmptyDay(period));
+}
+
+const maxCost = Math.max(...calendarDays.map((day) => day.totalCost), 1);
+const lastDate = createLocalDate(calendarDays.at(-1)?.period ?? toDateString(today));
+const weekCount = Math.max(1, getWeekIndex(toDateString(lastDate), startDate) + 1);
+
+const monthLabels: { label: string; column: number }[] = [];
+const seenMonths = new Set<string>();
+const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+for (const day of calendarDays) {
+  const date = createLocalDate(day.period);
+  const monthKey = day.period.slice(0, 7);
+
+  if (!seenMonths.has(monthKey)) {
+    seenMonths.add(monthKey);
+
+    monthLabels.push({
+      label: date.toLocaleString('default', { month: 'short' }),
+      column: getWeekIndex(day.period, startDate) + 1,
+    });
+  }
+}
+---
+
+<section data-usage-heatmap class="usage-heatmap">
+  <div class="usage-heatmap__scroller">
+    <div class="usage-heatmap__content">
+      <div
+        class="usage-heatmap__months"
+        style={`grid-template-columns: repeat(${weekCount}, var(--cell-size));`}>
+        {
+          monthLabels.map(({ label, column }) => (
+            <span style={`grid-column: ${column};`} class="min-w-8">
+              {label}
+            </span>
+          ))
+        }
+      </div>
+
+      <div class="usage-heatmap__body">
+        <div class="usage-heatmap__weekdays text-caption-foreground grid w-7" aria-hidden="true">
+          {weekDays.map((day) => <span>{day}</span>)}
+        </div>
+
+        <div
+          data-heatmap-grid
+          class="usage-heatmap__grid"
+          style={`grid-template-columns: repeat(${weekCount}, var(--cell-size));`}>
+          {
+            calendarDays.map((day, index) => {
+              const date = createLocalDate(day.period);
+              const week = getWeekIndex(day.period, startDate);
+              const weekday = date.getDay();
+              const intensity = getIntensity(day.totalCost);
+              const hasUsage = day.totalCost > 0;
+
+              return (
+                <button
+                  type="button"
+                  data-usage-cell
+                  data-index={index}
+                  data-date={day.period}
+                  data-cost={day.totalCost}
+                  data-has-usage={String(hasUsage)}
+                  data-intensity={intensity}
+                  class="usage-heatmap__cell"
+                  style={`
+                    grid-column: ${week + 1};
+                    grid-row: ${weekday + 1};
+                  `}
+                  aria-label={
+                    hasUsage
+                      ? `${day.period}: $${day.totalCost.toFixed(2)}`
+                      : `${day.period}: no usage`
+                  }
+                />
+              );
+            })
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-heatmap__legend-container">
+    <div class="usage-heatmap__legend" aria-hidden="true">
+      <span>Less</span>
+      <span data-legend-cell data-intensity="0"></span>
+      <span data-legend-cell data-intensity="1"></span>
+      <span data-legend-cell data-intensity="2"></span>
+      <span data-legend-cell data-intensity="3"></span>
+      <span data-legend-cell data-intensity="4"></span>
+      <span>More</span>
+    </div>
+  </div>
+
+  <div data-tooltip class="usage-heatmap__tooltip" role="status">
+    <div data-tooltip-date class="usage-heatmap__tooltip-date"></div>
+    <div data-tooltip-cost class="usage-heatmap__tooltip-cost"></div>
+    <div data-tooltip-tokens class="usage-heatmap__tooltip-tokens"></div>
+    <div data-tooltip-models class="usage-heatmap__tooltip-models"></div>
+  </div>
+
+  <input
+    type="hidden"
+    data-provider-icons
+    data-antigravity={antigravityIcon}
+    data-anthropic={anthropicIcon}
+    data-gemini={geminiIcon}
+    data-glm={glmIcon}
+    data-kimi={kimiIcon}
+    data-openai={openaiIcon}
+  />
+
+  <script type="application/json" data-usage-json set:html={JSON.stringify(calendarDays)} />
+
+  <script>
+    interface ModelBreakdown {
+      cacheCreationTokens: number;
+      cacheReadTokens: number;
+      cost: number;
+      inputTokens: number;
+      modelName: string;
+      outputTokens: number;
+    }
+
+    interface ProviderIcons {
+      antigravity: string;
+      anthropic: string;
+      gemini: string;
+      glm: string;
+      kimi: string;
+      openai: string;
+    }
+
+    type ModelProvider = keyof ProviderIcons;
+
+    interface DailyUsage {
+      agent: string;
+      cacheCreationTokens: number;
+      cacheReadTokens: number;
+      inputTokens: number;
+      metadata?: {
+        agents?: string[];
+      };
+      modelBreakdowns: ModelBreakdown[];
+      modelsUsed: string[];
+      outputTokens: number;
+      period: string;
+      totalCost: number;
+      totalTokens: number;
+    }
+
+    const getModelDetails = (name: string): { name: string; icon: ModelProvider | null } => {
+      const modelDetails: Record<string, { name: string; icon: ModelProvider }> = {
+        'claude-opus-4-8': { name: 'Opus 4.8', icon: 'anthropic' },
+        'claude-opus-4-7': { name: 'Opus 4.7', icon: 'anthropic' },
+        'claude-opus-4-6': { name: 'Opus 4.6', icon: 'anthropic' },
+        'claude-opus-4-5': { name: 'Opus 4.5', icon: 'anthropic' },
+        'claude-sonnet-4-6': { name: 'Sonnet 4.6', icon: 'anthropic' },
+        'claude-sonnet-4-5': { name: 'Sonnet 4.5', icon: 'anthropic' },
+        'claude-haiku-4-5': { name: 'Haiku 4.5', icon: 'anthropic' },
+        'claude-haiku-4-5-20251001': { name: 'Haiku 4.5', icon: 'anthropic' },
+        'claude-3.5-haiku': { name: 'Haiku 3.5', icon: 'anthropic' },
+        'gpt-5.5': { name: 'GPT-5.5', icon: 'openai' },
+        'gpt-5.4': { name: 'GPT-5.4', icon: 'openai' },
+        'gpt-5.3-codex': { name: 'GPT-5.3 Codex', icon: 'openai' },
+        'gpt-5.3-codex-spark': { name: 'GPT-5.3 Codex Spark', icon: 'openai' },
+        'gpt-5.2': { name: 'GPT-5.2', icon: 'openai' },
+        'gpt-5.2-codex': { name: 'GPT-5.2 Codex', icon: 'openai' },
+        'gpt-5.1-codex': { name: 'GPT-5.1 Codex', icon: 'openai' },
+        'gpt-5.1-codex-max': { name: 'GPT-5.1 Codex Max', icon: 'openai' },
+        'gpt-5-codex': { name: 'GPT-5 Codex', icon: 'openai' },
+        'gemini-3-flash-preview': { name: 'Gemini 3 Flash', icon: 'gemini' },
+        'gemini-3-pro-preview': { name: 'Gemini 3 Pro', icon: 'gemini' },
+        'gemini-3.1-pro-preview-customtools': { name: 'Gemini 3.1 Pro', icon: 'gemini' },
+        'antigravity-gemini-3.1-pro': { name: 'Antigravity Gemini 3.1 Pro', icon: 'antigravity' },
+        'claude-fable-5': { name: 'Claude Fable 5', icon: 'anthropic' },
+        'glm-4.7': { name: 'GLM 4.7', icon: 'glm' },
+        'glm-4.7-free': { name: 'GLM 4.7', icon: 'glm' },
+        'kimi-k2.5-free': { name: 'Kimi K2.5', icon: 'kimi' },
+      };
+
+      return modelDetails[name] ?? { name: formatFallbackModelName(name), icon: null };
+    };
+
+    let audioContext: AudioContext | null = null;
+    function getAudioContext() {
+      if (!audioContext) {
+        audioContext = new AudioContext();
+      }
+
+      if (audioContext.state === 'suspended') {
+        void audioContext.resume();
+      }
+
+      return audioContext;
+    }
+
+    const sounds = {
+      tick: () => {
+        const ctx = getAudioContext();
+        const t = ctx.currentTime;
+
+        const noise = ctx.createBufferSource();
+        const buf = ctx.createBuffer(1, ctx.sampleRate * 0.003, ctx.sampleRate);
+        const data = buf.getChannelData(0);
+
+        for (let i = 0; i < data.length; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / 15);
+        }
+
+        noise.buffer = buf;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'highpass';
+        filter.frequency.value = 3500;
+
+        const gain = ctx.createGain();
+        gain.gain.value = 0.2;
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start(t);
+      },
+
+      click: () => {
+        const ctx = getAudioContext();
+        const t = ctx.currentTime;
+
+        const noise = ctx.createBufferSource();
+        const buf = ctx.createBuffer(1, ctx.sampleRate * 0.006, ctx.sampleRate);
+        const data = buf.getChannelData(0);
+
+        for (let i = 0; i < data.length; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / 40);
+        }
+
+        noise.buffer = buf;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 4000 + Math.random() * 800;
+        filter.Q.value = 2.5;
+
+        const gain = ctx.createGain();
+        gain.gain.value = 0.32;
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start(t);
+      },
+    };
+
+    function formatFallbackModelName(modelName: string) {
+      return modelName
+        .replace(/(\d)-(\d)/g, '$1.$2')
+        .replace(/-\d{8}$/, '')
+        .split('-')
+        .map((part) => {
+          if (part === 'gpt' || part === 'glm') return part.toUpperCase();
+          if (part === 'claude') return 'Claude';
+          if (part === 'gemini') return 'Gemini';
+          if (part === 'kimi') return 'Kimi';
+          return part.charAt(0).toUpperCase() + part.slice(1);
+        })
+        .join(' ');
+    }
+
+    function formatCost(cost: number) {
+      return `$${Number(cost).toFixed(2)}`;
+    }
+
+    function formatNumber(value: number) {
+      return new Intl.NumberFormat().format(value);
+    }
+
+    function formatDate(dateStr: string) {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const date = new Date(year!, month! - 1, day!);
+
+      const monthLabel = date.toLocaleString('default', { month: 'short' });
+      const dayNumber = date.getDate();
+
+      let suffix = 'th';
+
+      if (dayNumber === 1 || dayNumber === 21 || dayNumber === 31) {
+        suffix = 'st';
+      } else if (dayNumber === 2 || dayNumber === 22) {
+        suffix = 'nd';
+      } else if (dayNumber === 3 || dayNumber === 23) {
+        suffix = 'rd';
+      }
+
+      return `${monthLabel} ${dayNumber}${suffix}`;
+    }
+
+    function moveTooltip(tooltip: HTMLElement, event: PointerEvent | MouseEvent) {
+      const offset = 14;
+      const tooltipRect = tooltip.getBoundingClientRect();
+
+      let left = event.clientX + offset;
+      let top = event.clientY + offset;
+
+      if (left + tooltipRect.width > window.innerWidth - 12) {
+        left = event.clientX - tooltipRect.width - offset;
+      }
+
+      if (top + tooltipRect.height > window.innerHeight - 12) {
+        top = event.clientY - tooltipRect.height - offset;
+      }
+
+      tooltip.style.left = `${Math.max(12, left)}px`;
+      tooltip.style.top = `${Math.max(12, top)}px`;
+    }
+
+    function renderModels(container: HTMLElement, day: DailyUsage, icons: ProviderIcons) {
+      container.innerHTML = '';
+
+      if (day.modelBreakdowns.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'usage-heatmap__tooltip-model-row';
+        empty.textContent = 'No usage recorded';
+        container.append(empty);
+        return;
+      }
+
+      const models = [...day.modelBreakdowns].sort((a, b) => b.cost - a.cost);
+
+      for (const model of models) {
+        const { name: modelName, icon: modelIcon } = getModelDetails(model.modelName);
+
+        const row = document.createElement('div');
+        row.className = 'usage-heatmap__tooltip-model-row';
+
+        const iconContainer = document.createElement('span');
+        iconContainer.className = 'usage-heatmap__tooltip-model-icon';
+        if (modelIcon) {
+          const iconSvg = icons[modelIcon];
+          iconContainer.innerHTML = iconSvg;
+        }
+
+        const name = document.createElement('span');
+        name.className = 'usage-heatmap__tooltip-model-name';
+        name.textContent = modelName;
+
+        const cost = document.createElement('span');
+        cost.className = 'usage-heatmap__tooltip-model-cost';
+        cost.textContent = formatCost(model.cost);
+
+        row.append(iconContainer, name, cost);
+        container.append(row);
+      }
+    }
+
+    document.querySelectorAll<HTMLElement>('[data-usage-heatmap]').forEach((root) => {
+      const iconsEl = root.querySelector<HTMLInputElement>('[data-provider-icons]');
+      const icons: ProviderIcons = {
+        antigravity: iconsEl?.dataset.antigravity ?? '',
+        anthropic: iconsEl?.dataset.anthropic ?? '',
+        gemini: iconsEl?.dataset.gemini ?? '',
+        glm: iconsEl?.dataset.glm ?? '',
+        kimi: iconsEl?.dataset.kimi ?? '',
+        openai: iconsEl?.dataset.openai ?? '',
+      };
+
+      const json = root.querySelector<HTMLScriptElement>('[data-usage-json]');
+      const data = JSON.parse(json?.textContent ?? '[]') as DailyUsage[];
+
+      const tooltip = root.querySelector<HTMLElement>('[data-tooltip]');
+      const tooltipDate = root.querySelector<HTMLElement>('[data-tooltip-date]');
+      const tooltipCost = root.querySelector<HTMLElement>('[data-tooltip-cost]');
+      const tooltipTokens = root.querySelector<HTMLElement>('[data-tooltip-tokens]');
+      const tooltipModels = root.querySelector<HTMLElement>('[data-tooltip-models]');
+
+      if (!tooltip || !tooltipDate || !tooltipCost || !tooltipTokens || !tooltipModels) {
+        return;
+      }
+
+      const isTouch = window.matchMedia('(hover: none)').matches;
+      const isTinyDevice = window.matchMedia('(max-width: 480px)').matches;
+      const soundEnabled = !isTouch && !isTinyDevice;
+
+      let activeIndex: number | null = null;
+
+      function showTooltip(event: PointerEvent | MouseEvent, index: number) {
+        const day = data[index];
+
+        if (!day) {
+          return;
+        }
+
+        if (activeIndex !== index && soundEnabled) {
+          sounds.tick();
+        }
+
+        activeIndex = index;
+
+        tooltip.dataset.visible = 'true';
+        tooltipDate.textContent = formatDate(day.period);
+
+        if (day.totalCost > 0) {
+          tooltipCost.textContent = formatCost(day.totalCost);
+          tooltipTokens.textContent = `${formatNumber(day.totalTokens)} tokens`;
+        } else {
+          tooltipCost.textContent = 'No usage';
+          tooltipTokens.textContent = '0 tokens';
+        }
+
+        renderModels(tooltipModels, day, icons);
+        moveTooltip(tooltip, event);
+      }
+
+      function hideTooltip() {
+        activeIndex = null;
+        delete tooltip.dataset.visible;
+      }
+
+      root.querySelectorAll<HTMLElement>('[data-usage-cell]').forEach((cell) => {
+        cell.addEventListener('pointerenter', (event) => {
+          if (event.pointerType === 'touch') {
+            return;
+          }
+
+          const index = Number(cell.dataset.index);
+          showTooltip(event, index);
+        });
+
+        cell.addEventListener('pointermove', (event) => {
+          if (event.pointerType === 'touch') {
+            return;
+          }
+
+          moveTooltip(tooltip, event);
+        });
+
+        cell.addEventListener('pointerleave', (event) => {
+          if (event.pointerType === 'touch') {
+            return;
+          }
+
+          hideTooltip();
+        });
+
+        cell.addEventListener('click', (event) => {
+          const index = Number(cell.dataset.index);
+
+          if (soundEnabled) {
+            sounds.click();
+          }
+
+          showTooltip(event, index);
+        });
+
+        cell.addEventListener('blur', () => {
+          hideTooltip();
+        });
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          hideTooltip();
+        }
+      });
+    });
+  </script>
+</section>

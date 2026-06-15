@@ -44,6 +44,10 @@ export const PAGE_META = {
     title: 'Page not found',
     description: 'That link may be broken or the page may have moved.',
   },
+  '/token-usage': {
+    title: 'Token Usage',
+    description: 'A comprehensive breakdown of my AI token usage',
+  },
 };
 
 export type PageRoute = keyof typeof PAGE_META;

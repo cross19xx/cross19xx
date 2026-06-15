@@ -1,0 +1,62 @@
+---
+import PageIntro from '_/components/PageIntro.astro';
+import TokenUsageHeatmap from '_/components/TokenUsageHeatmap.astro';
+import BaseLayout from '_/layouts/Base.astro';
+import type { UsageData } from '_/types/usage';
+import { blobUrl } from '_/utils/misc';
+
+import dayjs from 'dayjs';
+
+export const prerender = false;
+
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=10800, stale-while-revalidate=600');
+
+let usage: UsageData = { daily: [], totals: undefined };
+try {
+  const res = await fetch(blobUrl('ccusage.json'));
+  if (res.ok) {
+    usage = (await res.json()) as UsageData;
+  } else {
+    console.error('token-usage: Blob fetch failed', res.status, res.statusText);
+  }
+} catch (error) {
+  console.error('token-usage: Blob fetch error', error);
+}
+
+const totalTokens = usage.totals?.totalTokens;
+const totalCost = usage.totals?.totalCost;
+
+const tokenString = new Intl.NumberFormat('en', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+}).format(totalTokens ?? 0);
+
+const costString = new Intl.NumberFormat('en', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+}).format(totalCost ?? 0);
+
+const description =
+  totalTokens || totalCost
+    ? `${tokenString} tokens, costing around ${costString} thus far`
+    : "AI is not going to replace the developer, but rather the developer that doesn't use AI";
+
+const lastRead: string | null = usage.totals?.lastRead
+  ? dayjs(usage.totals.lastRead).format('MMM D, YYYY, HH:mm:ss A')
+  : null;
+---
+
+<BaseLayout title="Token Usage" description="A heatmap of my token usage">
+  <PageIntro title="Token Usage" description={description} eyebrow="01 / AI" />
+
+  <div class="border-border/50 min-h-[calc(100dvh-32.5rem)] border-t">
+    <div class="mx-auto max-w-5xl p-6 lg:p-8">
+      <div class="mb-6 flex flex-row items-center justify-between lg:mb-8">
+        <h2 class="text-caption-foreground font-semibold">Token Usage</h2>
+        {lastRead && <p class="text-caption-foreground text-xs">Last updated {lastRead}</p>}
+      </div>
+      <TokenUsageHeatmap usage={usage} />
+    </div>
+  </div>
+</BaseLayout>
