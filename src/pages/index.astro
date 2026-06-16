@@ -11,7 +11,7 @@ import { getFeaturedPhotos } from '_/data/photos';
 import { projects } from '_/data/projects';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
-import { MASONRY_BREAKPOINTS, padNumber } from '_/utils/misc';
+import { MASONRY_BREAKPOINTS, blobUrl, padNumber } from '_/utils/misc';
 
 import { Masonry } from 'astro-masonry';
 
@@ -34,14 +34,6 @@ const skills: { name: string; blurb: string }[] = [
     name: 'Backend development',
     blurb:
       'APIs, data models, and infrastructure that quietly keep everything above them running. Python is my jam.',
-  },
-  {
-    name: 'Web development',
-    blurb: 'Fast, accessible web apps and sites — from marketing pages to full product frontend.',
-  },
-  {
-    name: 'Desktop applications',
-    blurb: 'Cross-platform desktop software for the workflows that never left the big screen.',
   },
 ];
 
@@ -74,8 +66,14 @@ const posts = (await getCollection('blog'))
 
       <div class="reveal mt-10 flex flex-wrap items-center gap-6 [--reveal-delay:300ms]">
         <a
-          href={`mailto:${EMAIL}`}
+          href={blobUrl('Kenneth_Kwakye-Gyamfi_Resume.pdf')}
+          target="_blank"
           class="bg-foreground/90 text-background hover:bg-foreground rounded-md px-5 py-2.5 text-sm font-medium transition-transform active:scale-98">
+          Résumé (PDF) ↗
+        </a>
+        <a
+          href={`mailto:${EMAIL}`}
+          class="text-muted-foreground hover:text-foreground text-sm font-medium">
           {EMAIL}
         </a>
         <a
@@ -106,12 +104,13 @@ const posts = (await getCollection('blog'))
     </div>
   </section>
 
-  <!-- Experience (work/what I do) -->
+  <!-- Work: what I do + projects (merged) -->
   <HomeSection
     id="work"
     title="What I do"
     eyebrow="01 / Work"
-    description="Most of my work lives on a screen in someone's pocket. I build mobile apps end to end — iOS, Android, Watch, tvOS — and handle the backend and web layers that sit behind them.">
+    description="Most of my work lives on a screen in someone's pocket. I build mobile apps end to end — iOS, Android, Watch, tvOS — and handle the backend and web layers that sit behind them."
+    link={{ text: 'All Projects', href: '/projects' }}>
     <ul role="list" class="mt-12 grid grid-cols-1 gap-x-12 gap-y-10 sm:grid-cols-2">
       {
         skills.map(({ name, blurb }, i) => (
@@ -125,15 +124,15 @@ const posts = (await getCollection('blog'))
         ))
       }
     </ul>
-  </HomeSection>
 
-  <!-- Projects -->
-  <HomeSection
-    id="projects"
-    title="Projects"
-    eyebrow="02 / Building Next"
-    description="A bench of ideas in various states of done — some shipping, some still sketches in a notebook."
-    link={{ text: 'All Projects', href: '/projects' }}>
+    <div
+      class="reveal border-border mt-16 flex items-baseline justify-between gap-6 border-t pt-10">
+      <h3 class="text-xl font-semibold tracking-tight">Selected projects</h3>
+      <p class="text-caption-foreground font-mono text-sm tracking-wide uppercase">Building next</p>
+    </div>
+    <p class="reveal text-muted-foreground mt-4 max-w-[55ch] text-base text-pretty">
+      A bench of ideas in various states of done — some shipping, some still sketches in a notebook.
+    </p>
     <ul role="list" class="divide-border/50 mt-8 divide-y">
       {featuredProjects.map((project, i) => <ProjectRow project={project} index={i} />)}
     </ul>
@@ -143,8 +142,8 @@ const posts = (await getCollection('blog'))
   <HomeSection
     id="photography"
     title="Photography"
-    eyebrow="03 / Field Notes"
-    description="Code is how I make a living; photographs are how I keep looking. A rolling selection of frames from Accra and wherever the road goes.">
+    eyebrow="02 / Field Notes"
+    description="Code pays the bills; photography keeps the eye sharp — the same sense of light, framing, and timing I bring to the interfaces I build. A rolling selection from Accra and wherever the road goes.">
     <Masonry breakpointCols={MASONRY_BREAKPOINTS} class="mt-12 gap-4">
       {
         featuredPhotos.map(({ photo, aspect, delay }) => (
@@ -188,7 +187,7 @@ const posts = (await getCollection('blog'))
   <HomeSection
     id="writing"
     title="Writing"
-    eyebrow="04 / Notes"
+    eyebrow="03 / Notes"
     description="Occasional notes on building software, making pictures, and the places the two overlap."
     link={{ text: 'All Posts', href: '/blog' }}>
     <ul role="list" class="divide-border/50 mt-8 divide-y">
@@ -209,7 +208,7 @@ const posts = (await getCollection('blog'))
         <div class="reveal flex items-baseline justify-between gap-6 md:block">
           <h2 class="text-2xl font-semibold tracking-tight">About</h2>
           <p class="text-caption-foreground font-mono text-sm tracking-wide uppercase md:mt-2">
-            05 / Person
+            04 / Person
           </p>
         </div>
         <div class="reveal text-muted-foreground space-y-5 text-base md:[--reveal-delay:100ms]">
@@ -231,7 +230,7 @@ const posts = (await getCollection('blog'))
   <!-- Contact -->
   <section id="contact" class="border-border scroll-mt-24 border-t py-20 sm:py-28">
     <div class="mx-auto max-w-5xl px-6 lg:px-8">
-      <p class="text-caption-foreground font-mono text-sm tracking-wide uppercase">06 / Contact</p>
+      <p class="text-caption-foreground font-mono text-sm tracking-wide uppercase">05 / Contact</p>
       <h2
         class="reveal mt-6 max-w-[24ch] text-3xl font-semibold tracking-tight text-balance [--reveal-delay:100ms] sm:text-4xl">
         Have a project in mind — or a print you'd like on your wall?
@@ -241,6 +240,14 @@ const posts = (await getCollection('blog'))
         class="reveal decoration-border hover:decoration-foreground mt-8 inline-block text-xl font-medium underline underline-offset-4 [--reveal-delay:200ms] sm:text-2xl">
         {EMAIL}
       </a>
+      <p class="reveal text-muted-foreground mt-6 text-sm [--reveal-delay:300ms]">
+        Or <a
+          href={blobUrl('Kenneth_Kwakye-Gyamfi_Resume.pdf')}
+          target="_blank"
+          class="text-foreground decoration-border hover:decoration-foreground underline underline-offset-4"
+          >download my résumé (PDF) ↗</a
+        >.
+      </p>
     </div>
   </section>
 </BaseLayout>
