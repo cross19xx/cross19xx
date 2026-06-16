@@ -29,6 +29,7 @@
     "@vercel/speed-insights": "^2.0.0",
     "astro": "^6.4.6",
     "astro-masonry": "^1.2.2",
+    "blurhash": "^2.0.5",
     "dayjs": "^1.11.21",
     "satori": "^0.26.0",
     "sharp": "^0.35.1",

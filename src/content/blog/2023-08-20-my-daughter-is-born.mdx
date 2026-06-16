@@ -7,6 +7,7 @@ readingTime: 3
 topic: Life
 ---
 
+import BlurImage from '_/components/BlurImage.astro';
 import { blobUrl } from '_/utils/misc';
 
 > Not sure why, but I get the feeling I shouldn't use the exact date she was born. But it's not that far off.
@@ -28,7 +29,13 @@ And smaller, because all the noise of life faded. The worries, the deadlines, th
 For months, she had existed as hope. As kicks. As scans. As conversations. As tiny clothes folded and waiting. As names discussed and imagined. As prayers whispered in private. She was already loved before we met her, but meeting her made that love real in a way I still can't explain.
 
 <figure>
-  <img src={blobUrl('blog-assets/first-time.jpeg')} alt="First time holding her in my arms" />
+  <BlurImage
+    src={blobUrl('blog-assets/first-time.jpg')}
+    alt="First time holding her in my arms"
+    hash="LXM$;@v0VuIV%NvynNo~.7NbIUt6"
+    width={1600}
+    height={2000}
+  />
   <figcaption>The first time holding HER</figcaption>
 </figure>
 

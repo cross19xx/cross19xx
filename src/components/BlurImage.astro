@@ -1,0 +1,82 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  hash: string;
+}
+
+const { src, alt, width, height, hash } = Astro.props;
+---
+
+<div class="blur-wrap">
+  <canvas class="blur-canvas" data-hash={hash} width="32" height="32"></canvas>
+
+  <img
+    class="blur-img"
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading="lazy"
+    decoding="async"
+  />
+</div>
+
+<style>
+  .blur-wrap {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .blur-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .blur-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    filter: blur(8px);
+    transform: scale(1.05);
+    transition: opacity 0.4s ease;
+  }
+
+  .blur-wrap.loaded .blur-img {
+    opacity: 1;
+  }
+  .blur-wrap.loaded .blur-canvas {
+    opacity: 0;
+  }
+</style>
+
+<script>
+  import { decode } from 'blurhash';
+
+  document.querySelectorAll<HTMLCanvasElement>('.blur-canvas').forEach((canvas) => {
+    const hash = canvas.dataset.hash;
+    if (!hash) return;
+
+    const pixels = decode(hash, 32, 32);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const imageData = ctx.createImageData(32, 32);
+    imageData.data.set(pixels);
+    ctx.putImageData(imageData, 0, 0);
+
+    const wrap = canvas.parentElement as HTMLElement;
+    const img = canvas.nextElementSibling as HTMLImageElement;
+    const reveal = () => wrap.classList.add('loaded');
+
+    if (img.complete) reveal();
+    else img.addEventListener('load', reveal, { once: true });
+  });
+</script>
