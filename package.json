@@ -14,6 +14,7 @@
     "format": "biome format --write",
     "lint": "biome lint",
     "preview": "astro preview",
+    "test": "node --test",
     "typecheck": "astro check"
   },
   "dependencies": {
