@@ -1,0 +1,54 @@
+---
+import { KITCHEN_PLATFORMS, KITCHEN_STATUS_LABEL } from "_/lib/kitchen";
+import type { KitchenProject, KitchenStatus } from "_/lib/kitchen";
+import { padNumber } from "_/utils/misc";
+
+interface Props {
+  project: KitchenProject;
+  index: number;
+  class?: string;
+}
+
+const { project, index, class: className } = Astro.props;
+
+const statusBadge: Record<KitchenStatus, string> = {
+  done: "bg-emerald-100 text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-400",
+  building: "bg-amber-100 text-amber-800 dark:bg-amber-400/10 dark:text-amber-400",
+};
+
+const presentPlatforms = KITCHEN_PLATFORMS.filter((p) => project.platforms[p.key]);
+---
+
+<li class:list={['reveal flex gap-5 py-8', className]}>
+  <span class="text-caption-foreground font-mono text-sm">{padNumber(index + 1)}</span>
+  <div class="flex-1">
+    <h3 class="text-base font-medium">{project.title}</h3>
+
+    <p class="text-muted-foreground mt-1.5 max-w-[60ch] text-base text-pretty">{project.summary}</p>
+
+    {
+      project.tags.length > 0 && (
+        <p class="text-caption-foreground mt-3 font-mono text-xs tracking-wide uppercase">
+          {project.tags.join('  ·  ')}
+        </p>
+      )
+    }
+
+    <div class="mt-4 flex flex-wrap gap-2">
+      {
+        presentPlatforms.map((p) => {
+          const info = project.platforms[p.key]!;
+          const label = `${p.label} · ${KITCHEN_STATUS_LABEL[info.status]}`;
+          const badgeClass = `rounded-sm px-2.5 py-0.5 text-xs font-medium ${statusBadge[info.status]}`;
+          return info.url ? (
+            <a href={info.url} class:list={[badgeClass, 'hover:underline']}>
+              {label}
+            </a>
+          ) : (
+            <span class={badgeClass}>{label}</span>
+          );
+        })
+      }
+    </div>
+  </div>
+</li>
