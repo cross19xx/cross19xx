@@ -43,7 +43,7 @@ const description =
     : "AI is not going to replace the developer, but rather the developer that doesn't use AI";
 
 const lastRead: string | null = usage.totals?.lastRead
-  ? dayjs(usage.totals.lastRead).format('MMM D, YYYY, HH:mm:ss A')
+  ? dayjs(usage.totals.lastRead).format('ddd MMM D, YYYY, hh:mm A')
   : null;
 ---
 
@@ -52,9 +52,13 @@ const lastRead: string | null = usage.totals?.lastRead
 
   <div class="border-border/50 min-h-[calc(100dvh-32.5rem)] border-t">
     <div class="mx-auto max-w-5xl p-6 lg:p-8">
-      <div class="mb-6 flex flex-row items-center justify-between lg:mb-8">
+      <div class="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between lg:mb-8">
         <h2 class="text-caption-foreground font-semibold">Token Usage</h2>
-        {lastRead && <p class="text-caption-foreground text-xs">Last updated {lastRead}</p>}
+        {
+          lastRead && (
+            <p class="text-caption-foreground font-mono text-xs">Last updated {lastRead}</p>
+          )
+        }
       </div>
       <TokenUsageHeatmap usage={usage} />
     </div>

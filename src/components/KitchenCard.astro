@@ -2,8 +2,8 @@
 import androidIcon from '_/assets/icons/android.svg?raw';
 import appleIcon from '_/assets/icons/apple.svg?raw';
 import reactIcon from '_/assets/icons/react.svg?raw';
-import { KITCHEN_PLATFORMS, KITCHEN_STATUS_LABEL } from '_/lib/kitchen';
 import type { KitchenPlatformKey, KitchenProject, KitchenStatus } from '_/lib/kitchen';
+import { KITCHEN_PLATFORMS, KITCHEN_STATUS_LABEL } from '_/lib/kitchen';
 import { padNumber } from '_/utils/misc';
 
 interface Props {
@@ -48,7 +48,7 @@ const presentPlatforms = KITCHEN_PLATFORMS.filter((p) => project.platforms[p.key
         presentPlatforms.map((p) => {
           const info = project.platforms[p.key]!;
           const statusLabel = KITCHEN_STATUS_LABEL[info.status];
-          const badgeClass = `inline-flex items-center gap-1.5 rounded-sm px-2.5 py-0.5 text-xs font-medium ${statusBadge[info.status]}`;
+          const badgeClass = `inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1 text-xs font-medium ${statusBadge[info.status]}`;
           return info.url ? (
             <a
               href={info.url}
