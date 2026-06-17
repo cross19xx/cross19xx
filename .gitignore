@@ -23,3 +23,6 @@ pnpm-debug.log*
 
 # Vercel specific issues
 .vercel/
+
+# Miscellaneous
+docs/superpowers/
