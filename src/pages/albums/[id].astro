@@ -1,6 +1,8 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
 
+import { ArrowLeftIcon } from '@lucide/astro';
+
 import BlurImage from '_/components/BlurImage.astro';
 import Lightbox from '_/components/Lightbox.astro';
 import PageIntro from '_/components/PageIntro.astro';
@@ -44,9 +46,15 @@ const pageDescription = `${album.data.title} - ${album.data.description}`;
   <PageIntro
     eyebrow={album.data.label}
     title={album.data.title}
-    description={album.data.description}
-  />
-
+    description={album.data.description}>
+    <p slot="page-link" class="mb-4">
+      <a
+        href="/photography"
+        class="reveal text-foreground/80 hover:text-foreground inline-flex items-center gap-2 font-mono text-sm"
+        ><ArrowLeftIcon class="size-3" /> All Albums</a
+      >
+    </p>
+  </PageIntro>
   <section class="border-border border-y">
     <div class="mx-auto max-w-5xl px-6 py-4 lg:px-8">
       <Masonry breakpointCols={MASONRY_BREAKPOINTS} class="gap-4">

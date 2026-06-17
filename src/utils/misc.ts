@@ -1,9 +1,9 @@
 import { SITE_NAME } from '_/data/site';
 
 export const MASONRY_BREAKPOINTS = {
-  default: 3,
-  700: 2,
-  500: 1,
+  default: 4,
+  700: 3,
+  500: 2,
 } as const;
 
 export const constructPageTitle = (prefix: string) => `${prefix} - ${SITE_NAME}`;

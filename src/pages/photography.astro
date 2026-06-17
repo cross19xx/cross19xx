@@ -18,6 +18,8 @@ type MappedAlbum = InferEntrySchema<'albums'> & {
   showViewMore: boolean;
 };
 
+const SLICE_COUNT = 8;
+
 const albums = await getCollection('albums');
 const photos = await getCollection('photos');
 
@@ -31,13 +33,13 @@ const mappedAlbums: MappedAlbum[] = albums.map((album) => {
     .filter((photo) => photo.data.album?.id === album.id)
     .map((photo) => photo.data);
 
-  const showViewMore = albumPhotos.length > 6;
+  const showViewMore = albumPhotos.length > SLICE_COUNT;
 
   return {
     ...album.data,
     id: album.id,
     totalPhotosCount: albumPhotos.length,
-    photos: albumPhotos.slice(0, 6),
+    photos: albumPhotos.slice(0, SLICE_COUNT),
     showViewMore,
   };
 });
@@ -86,7 +88,7 @@ const chipClass =
       {
         mappedAlbums.map((album) => (
           <section data-album class="reveal">
-            <div class="flex items-baseline justify-between gap-6">
+            <div class="flex flex-col items-baseline justify-between gap-2 md:flex-row md:gap-6">
               <h2 class="text-2xl font-semibold tracking-tight">{album.title}</h2>
               <p class="text-caption-foreground font-mono text-sm tracking-wide uppercase">
                 {album.label}
@@ -127,18 +129,7 @@ const chipClass =
                     </button>
 
                     <figcaption class="mt-2.5 space-y-1.5">
-                      <div class="flex justify-between font-mono text-xs">
-                        <span class="text-foreground">{photo.label}</span>
-                        <span class="text-muted-foreground">{photo.name}</span>
-                      </div>
-                      <p class="text-caption-foreground font-mono text-xs">{exif}</p>
-                      <div class="flex flex-wrap gap-1.5">
-                        {photo.tags.map((tag) => (
-                          <button type="button" data-tag={tag} class={chipClass}>
-                            {tag}
-                          </button>
-                        ))}
-                      </div>
+                      <p class="text-mono text-caption-foreground text-xs">{photo.label}</p>
                     </figcaption>
                   </figure>
                 );
