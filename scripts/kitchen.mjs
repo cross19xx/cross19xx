@@ -1,3 +1,5 @@
+import { createClient } from "@libsql/client/web";
+
 export const CREATE_TABLE_SQL = `
 CREATE TABLE IF NOT EXISTS kitchen_projects (
   slug        TEXT PRIMARY KEY,
@@ -89,4 +91,89 @@ export function buildSetValues(existing, parsed, now) {
     platforms: JSON.stringify(platforms),
     updated_at: now,
   };
+}
+
+async function loadExisting(client, slug) {
+  const { rows } = await client.execute({
+    sql: "SELECT * FROM kitchen_projects WHERE slug = ?",
+    args: [slug],
+  });
+  if (rows.length === 0) return null;
+  const row = rows[0];
+  return {
+    slug: String(row.slug),
+    title: String(row.title),
+    summary: String(row.summary),
+    tags: JSON.parse(String(row.tags ?? "[]")),
+    platforms: JSON.parse(String(row.platforms ?? "{}")),
+  };
+}
+
+async function main() {
+  const url = process.env.TURSO_DATABASE_URL;
+  const authToken = process.env.TURSO_AUTH_TOKEN;
+  if (!url || !authToken) {
+    console.error("TURSO_DATABASE_URL / TURSO_AUTH_TOKEN are not set. Add them to .env");
+    process.exit(1);
+  }
+
+  const client = createClient({ url, authToken });
+  await client.execute(CREATE_TABLE_SQL);
+
+  const parsed = parseArgs(process.argv.slice(2));
+
+  if (parsed.command === "list") {
+    const { rows } = await client.execute(
+      "SELECT slug, title, platforms, updated_at FROM kitchen_projects ORDER BY updated_at DESC",
+    );
+    if (rows.length === 0) {
+      console.log("No kitchen projects yet.");
+      return;
+    }
+    for (const row of rows) {
+      const platforms = JSON.parse(String(row.platforms ?? "{}"));
+      const summary =
+        Object.entries(platforms)
+          .map(([k, v]) => `${k}:${v.status}`)
+          .join(", ") || "(no platforms)";
+      console.log(`${String(row.slug).padEnd(24)} ${String(row.title).padEnd(24)} ${summary}`);
+    }
+    return;
+  }
+
+  if (parsed.command === "rm") {
+    await client.execute({
+      sql: "DELETE FROM kitchen_projects WHERE slug = ?",
+      args: [parsed.slug],
+    });
+    console.log(`Removed "${parsed.slug}".`);
+    return;
+  }
+
+  const existing = await loadExisting(client, parsed.slug);
+  const values = buildSetValues(existing, parsed, Date.now());
+  await client.execute({
+    sql: `INSERT INTO kitchen_projects (slug, title, summary, tags, platforms, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?)
+          ON CONFLICT(slug) DO UPDATE SET
+            title=excluded.title, summary=excluded.summary, tags=excluded.tags,
+            platforms=excluded.platforms, updated_at=excluded.updated_at`,
+    args: [
+      values.slug,
+      values.title,
+      values.summary,
+      values.tags,
+      values.platforms,
+      values.updated_at,
+    ],
+  });
+  console.log(`Saved "${parsed.slug}".`);
+}
+
+const isMain = process.argv[1] && import.meta.url === `file://${process.argv[1]}`;
+if (isMain) {
+  main().catch((error) => {
+    console.error(error.message);
+    process.exit(1);
+  });
 }
