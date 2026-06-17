@@ -75,9 +75,9 @@ const posts = (await getCollection('blog'))
           Résumé (PDF) ↗
         </a>
         <a
-          href={`mailto:${EMAIL}`}
-          class="text-muted-foreground hover:text-foreground text-sm font-medium">
-          {EMAIL}
+          href="/about"
+          class="border-border text-foreground hover:border-foreground/40 rounded-md border px-5 py-2.5 text-sm font-medium transition-transform active:scale-98">
+          About me
         </a>
         <a
           href="https://www.github.com/cross19xx"
@@ -216,9 +216,14 @@ const posts = (await getCollection('blog'))
         </div>
         <div class="reveal text-muted-foreground space-y-5 text-base md:[--reveal-delay:100ms]">
           <p class="max-w-[60ch] text-pretty">
-            I'm a senior full stack mobile and web engineer currently based in Accra, Ghana. I'm
-            also a photographer whenever the light cooperates. My work spans the whole lifecycle of
-            a product, from wire-framing the first screens to running the backends behind them.
+            Nine years in, my work spans the full arc of a product — wireframing the first screens,
+            building the apps people actually hold, and running the backends behind them. Mostly
+            React Native with native Swift and Kotlin underneath, across regulated, high-consequence
+            domains: healthcare, banking, emergency response.
+          </p>
+          <p class="max-w-[60ch] text-pretty">
+            The camera came first, though — and the eye it trained for light, framing, and timing is
+            the same one I bring to an interface.
           </p>
           <a
             href="/about"
