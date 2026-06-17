@@ -1,7 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import { type CollectionEntry, getCollection } from 'astro:content';
 
+import BlurImage from '_/components/BlurImage.astro';
 import Lightbox from '_/components/Lightbox.astro';
 import PageIntro from '_/components/PageIntro.astro';
 import BaseLayout from '_/layouts/Base.astro';
@@ -51,42 +51,38 @@ const pageDescription = `${album.data.title} - ${album.data.description}`;
     <div class="mx-auto max-w-5xl px-6 py-4 lg:px-8">
       <Masonry breakpointCols={MASONRY_BREAKPOINTS} class="gap-4">
         {
-          photos.map(({ data: photo }) => (
-            <figure data-tags={photo.tags.join(',')} class="mb-4 break-inside-avoid sm:mb-5">
-              <button
-                type="button"
-                data-lightbox-open
-                data-src={photo.url}
-                data-alt={photo.alt}
-                data-title={photo.title}
-                data-exif={photo.exif}
-                data-file={photo.file}
-                class="group outline-border block w-full cursor-zoom-in overflow-hidden rounded-sm outline-1 -outline-offset-1">
-                <Image
-                  src={photo.url}
-                  inferSize
-                  alt={photo.alt}
-                  loading="lazy"
-                  class={`${photo.aspect} w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105`}
-                />
-              </button>
-
-              <figcaption class="mt-2.5 space-y-1.5">
-                <div class="flex justify-between font-mono text-xs">
-                  <span class="text-foreground">{photo.title}</span>
-                  <span class="text-muted-foreground">{photo.file}</span>
-                </div>
-                <p class="text-caption-foreground font-mono text-xs">{photo.exif}</p>
-                <div class="flex flex-wrap gap-1.5">
-                  {photo.tags.map((tag) => (
-                    <p class="tag-chip text-muted-foreground inset-ring-border/50 hover:text-foreground inset-ring">
-                      {tag}
-                    </p>
-                  ))}
-                </div>
-              </figcaption>
-            </figure>
-          ))
+          photos.map(({ data: photo }) => {
+            const exif = [
+              photo.makeAndModel,
+              photo.lens,
+              photo.aperture,
+              photo.shutterSpeed,
+              photo.iso,
+            ]
+              .filter(Boolean)
+              .join(' · ');
+            return (
+              <figure data-tags={photo.tags.join(',')} class="mb-4 break-inside-avoid sm:mb-5">
+                <button
+                  type="button"
+                  data-lightbox-open
+                  data-src={photo.url}
+                  data-alt={photo.description}
+                  data-title={photo.label}
+                  data-exif={exif}
+                  data-file={photo.name}
+                  class="group outline-border block w-full cursor-zoom-in overflow-hidden rounded-sm outline-1 -outline-offset-1">
+                  <BlurImage
+                    src={photo.url}
+                    alt={photo.label}
+                    hash={photo.blurhash}
+                    width={photo.width}
+                    height={photo.height}
+                  />
+                </button>
+              </figure>
+            );
+          })
         }
       </Masonry>
     </div>

@@ -1,19 +1,19 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 
 import { ArrowRightIcon, CheckIcon, ExternalLinkIcon } from '@lucide/astro';
 
+import BlurImage from '_/components/BlurImage.astro';
 import HomeSection from '_/components/HomeSection.astro';
 import PostRow from '_/components/PostRow.astro';
 import ProjectRow from '_/components/ProjectRow.astro';
-import { getFeaturedPhotos } from '_/data/photos';
 import { projects } from '_/data/projects';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
 import { blobUrl, MASONRY_BREAKPOINTS, padNumber } from '_/utils/misc';
 
 import { Masonry } from 'astro-masonry';
+import shuffle from 'lodash/shuffle';
 
 const skills: { name: string; blurb: string }[] = [
   {
@@ -38,11 +38,13 @@ const skills: { name: string; blurb: string }[] = [
 ];
 
 const featuredProjects = projects.filter((project) => project.featured);
-const featuredPhotos = await getFeaturedPhotos();
 
 const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
+
+const photos = await getCollection('photos');
+const featuredPhotos = shuffle(photos.filter((photo) => photo.data.featured));
 ---
 
 <BaseLayout
@@ -167,22 +169,22 @@ const posts = (await getCollection('blog'))
     description="Code pays the bills; photography keeps the eye sharp — the same sense of light, framing, and timing I bring to the interfaces I build. A rolling selection from Accra and wherever the road goes.">
     <Masonry breakpointCols={MASONRY_BREAKPOINTS} class="mt-12 gap-4">
       {
-        featuredPhotos.map(({ photo, aspect, delay }) => (
-          <figure class={`reveal mb-4 break-inside-avoid sm:mb-5 ${delay ?? ''}`}>
+        featuredPhotos.map(({ data: photo }) => (
+          <figure class="reveal mb-4 break-inside-avoid sm:mb-5">
             <a
               href="/photography"
               class="group block overflow-hidden rounded-sm outline-1 -outline-offset-1 outline-white/10">
-              <Image
+              <BlurImage
                 src={photo.url}
-                inferSize
-                alt={photo.alt}
-                loading="lazy"
-                class={`${aspect} w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105`}
+                width={photo.width}
+                height={photo.height}
+                hash={photo.blurhash}
+                alt={photo.description}
               />
             </a>
             <figcaption class="text-caption-foreground mt-2 flex justify-between font-mono text-xs">
-              <span>{photo.title}</span>
-              <span>{photo.file}</span>
+              <span>{photo.label}</span>
+              <span>{photo.name}</span>
             </figcaption>
           </figure>
         ))

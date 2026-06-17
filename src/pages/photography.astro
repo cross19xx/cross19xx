@@ -1,7 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection, type InferEntrySchema } from 'astro:content';
 
+import BlurImage from '_/components/BlurImage.astro';
 import Lightbox from '_/components/Lightbox.astro';
 import PageIntro from '_/components/PageIntro.astro';
 import { PAGE_META } from '_/data/pages';
@@ -21,7 +21,9 @@ type MappedAlbum = InferEntrySchema<'albums'> & {
 const albums = await getCollection('albums');
 const photos = await getCollection('photos');
 
-const tags = Array.from(new Set(photos.flatMap((photo) => photo.data.tags)));
+const tags = Array.from(new Set(photos.flatMap((photo) => photo.data.tags))).sort((a, b) =>
+  a.localeCompare(b),
+);
 tags.unshift('All');
 
 const mappedAlbums: MappedAlbum[] = albums.map((album) => {
@@ -29,13 +31,13 @@ const mappedAlbums: MappedAlbum[] = albums.map((album) => {
     .filter((photo) => photo.data.album?.id === album.id)
     .map((photo) => photo.data);
 
-  const showViewMore = albumPhotos.length > 5;
+  const showViewMore = albumPhotos.length > 6;
 
   return {
     ...album.data,
     id: album.id,
     totalPhotosCount: albumPhotos.length,
-    photos: albumPhotos.slice(0, 5),
+    photos: albumPhotos.slice(0, 6),
     showViewMore,
   };
 });
@@ -94,41 +96,53 @@ const chipClass =
               {album.description}
             </p>
             <Masonry breakpointCols={MASONRY_BREAKPOINTS} class="mt-8 gap-4">
-              {album.photos.map((photo) => (
-                <figure data-tags={photo.tags.join(',')} class="mb-4 break-inside-avoid sm:mb-5">
-                  <button
-                    type="button"
-                    data-lightbox-open
-                    data-src={photo.url}
-                    data-alt={photo.alt}
-                    data-title={photo.title}
-                    data-exif={photo.exif}
-                    data-file={photo.file}
-                    class="group outline-border block w-full cursor-zoom-in overflow-hidden rounded-sm outline-1 -outline-offset-1">
-                    <Image
-                      src={photo.url}
-                      alt={photo.alt}
-                      inferSize
-                      loading="lazy"
-                      class={`${photo.aspect} w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105`}
-                    />
-                  </button>
-                  <figcaption class="mt-2.5 space-y-1.5">
-                    <div class="flex justify-between font-mono text-xs">
-                      <span class="text-foreground">{photo.title}</span>
-                      <span class="text-muted-foreground">{photo.file}</span>
-                    </div>
-                    <p class="text-caption-foreground font-mono text-xs">{photo.exif}</p>
-                    <div class="flex flex-wrap gap-1.5">
-                      {photo.tags.map((tag) => (
-                        <button type="button" data-tag={tag} class={chipClass}>
-                          {tag}
-                        </button>
-                      ))}
-                    </div>
-                  </figcaption>
-                </figure>
-              ))}
+              {album.photos.map((photo) => {
+                const exif = [
+                  photo.makeAndModel,
+                  photo.lens,
+                  photo.aperture,
+                  photo.shutterSpeed,
+                  photo.iso,
+                ]
+                  .filter(Boolean)
+                  .join(' · ');
+                return (
+                  <figure data-tags={photo.tags.join(',')} class="mb-4 break-inside-avoid sm:mb-5">
+                    <button
+                      type="button"
+                      data-lightbox-open
+                      data-src={photo.url}
+                      data-alt={photo.description}
+                      data-title={photo.label}
+                      data-exif={exif}
+                      data-file={photo.name}
+                      class="group outline-border block w-full cursor-zoom-in overflow-hidden rounded-sm outline-1 -outline-offset-1">
+                      <BlurImage
+                        src={photo.url}
+                        alt={photo.label}
+                        hash={photo.blurhash}
+                        width={photo.width}
+                        height={photo.height}
+                      />
+                    </button>
+
+                    <figcaption class="mt-2.5 space-y-1.5">
+                      <div class="flex justify-between font-mono text-xs">
+                        <span class="text-foreground">{photo.label}</span>
+                        <span class="text-muted-foreground">{photo.name}</span>
+                      </div>
+                      <p class="text-caption-foreground font-mono text-xs">{exif}</p>
+                      <div class="flex flex-wrap gap-1.5">
+                        {photo.tags.map((tag) => (
+                          <button type="button" data-tag={tag} class={chipClass}>
+                            {tag}
+                          </button>
+                        ))}
+                      </div>
+                    </figcaption>
+                  </figure>
+                );
+              })}
             </Masonry>
 
             <div class="pt-12 text-center">

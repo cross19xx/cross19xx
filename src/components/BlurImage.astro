@@ -60,23 +60,33 @@ const { src, alt, width, height, hash } = Astro.props;
 <script>
   import { decode } from 'blurhash';
 
-  document.querySelectorAll<HTMLCanvasElement>('.blur-canvas').forEach((canvas) => {
-    const hash = canvas.dataset.hash;
-    if (!hash) return;
+  /**
+   * The ClientRouter swaps the DOM on navigation and won't re-run a module script that already
+   * executed on a previous page. Wire up inside astro:page-load (which also fires on first load)
+   * so blur reveals work after client-side navigation too.
+   */
+  const initBlurImages = () => {
+    document.querySelectorAll<HTMLCanvasElement>('.blur-canvas').forEach((canvas) => {
+      const hash = canvas.dataset.hash;
+      if (!hash || canvas.dataset.decoded) return;
 
-    const pixels = decode(hash, 32, 32);
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+      const pixels = decode(hash, 32, 32);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    const imageData = ctx.createImageData(32, 32);
-    imageData.data.set(pixels);
-    ctx.putImageData(imageData, 0, 0);
+      const imageData = ctx.createImageData(32, 32);
+      imageData.data.set(pixels);
+      ctx.putImageData(imageData, 0, 0);
+      canvas.dataset.decoded = 'true';
 
-    const wrap = canvas.parentElement as HTMLElement;
-    const img = canvas.nextElementSibling as HTMLImageElement;
-    const reveal = () => wrap.classList.add('loaded');
+      const wrap = canvas.parentElement as HTMLElement;
+      const img = canvas.nextElementSibling as HTMLImageElement;
+      const reveal = () => wrap.classList.add('loaded');
 
-    if (img.complete) reveal();
-    else img.addEventListener('load', reveal, { once: true });
-  });
+      if (img.complete) reveal();
+      else img.addEventListener('load', reveal, { once: true });
+    });
+  };
+
+  document.addEventListener('astro:page-load', initBlurImages);
 </script>

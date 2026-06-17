@@ -31,6 +31,7 @@
     "astro-masonry": "^1.2.2",
     "blurhash": "^2.0.5",
     "dayjs": "^1.11.21",
+    "lodash": "^4.18.1",
     "motion": "^12.40.0",
     "satori": "^0.26.0",
     "sharp": "^0.35.1",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
+    "@types/lodash": "^4.17.24",
     "prettier": "3.8.4",
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0"

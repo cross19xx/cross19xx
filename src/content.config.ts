@@ -46,37 +46,54 @@ const photos = defineCollection({
     const { rows } = await turso.execute('SELECT * FROM photos ORDER BY id');
     return rows.map((row) => {
       const metadata = JSON.parse(String(row.metadata)) as {
-        exif?: string;
-        variant?: string;
-        file?: string;
-        aspect?: string;
+        name: string;
+        makeAndModel: string;
+        lens: string;
+        aperture: string;
+        shutterSpeed: string;
+        iso: number;
       };
 
       return {
         id: String(row.id),
-        title: String(row.label),
-        alt: row.description === null ? '' : String(row.description),
+        label: String(row.label),
         url: String(row.url),
+        featured: row.featured === 1,
+        width: Number(row.width),
+        height: Number(row.height),
         tags: JSON.parse(String(row.tags)) as string[],
-        file: metadata.file ?? '',
-        exif: metadata.exif ?? '',
-        aspect: metadata.aspect ?? '',
-        variant: metadata.variant ?? '',
+        description: row.description === null ? '' : String(row.description),
+
+        // Metadata details
+        name: String(metadata.name),
+        makeAndModel: String(metadata.makeAndModel),
+        lens: String(metadata.lens),
+        aperture: String(metadata.aperture),
+        shutterSpeed: String(metadata.shutterSpeed),
+        iso: Number(metadata.iso),
+
         imageDate: row.image_date === null ? null : Number(row.image_date),
         album: String(row.album_id),
+        blurhash: String(row.blurhash),
       };
     });
   },
   schema: z.object({
-    title: z.string(),
-    alt: z.string(),
+    label: z.string(),
     url: z.string(),
+    featured: z.boolean(),
+    width: z.number(),
+    height: z.number(),
     tags: z.array(z.string()),
-    file: z.string(),
-    exif: z.string(),
-    aspect: z.string(),
-    variant: z.string(),
+    description: z.string(),
+    name: z.string(),
+    makeAndModel: z.string(),
+    lens: z.string(),
+    aperture: z.string(),
+    shutterSpeed: z.string(),
+    iso: z.number(),
     imageDate: z.number().nullable(),
+    blurhash: z.string(),
     album: reference('albums'),
   }),
 });
