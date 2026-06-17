@@ -1,25 +1,43 @@
 ---
 import { SOCIAL_MEDIA } from '_/data/site';
+
+const pageLinks = [
+  { label: 'Now', href: '/now' },
+  { label: 'Uses', href: '/uses' },
+  { label: 'Token Usage', href: '/token-usage' },
+];
 ---
 
 <footer class="border-border border-t py-10">
-  <div
-    class="mx-auto flex max-w-5xl flex-col gap-6 px-6 sm:flex-row sm:items-center sm:justify-between lg:px-8">
-    <p class="text-caption-foreground text-sm">© 2026 Kenneth Kwakye-Gyamfi · Accra, Ghana</p>
-    <ul role="list" class="text-muted-foreground flex items-center gap-5 text-sm">
-      {
-        SOCIAL_MEDIA.map((social) => (
-          <li>
-            <a
-              href={social.href}
-              class="hover:text-foreground"
-              target="_blank"
-              rel="noopener noreferrer">
-              {social.label}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+  <div class="mx-auto max-w-5xl px-6 lg:px-8">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <ul role="list" class="text-muted-foreground flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+        {
+          pageLinks.map((link) => (
+            <li>
+              <a href={link.href} class="hover:text-foreground">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <ul role="list" class="text-muted-foreground flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+        {
+          SOCIAL_MEDIA.map((social) => (
+            <li>
+              <a
+                href={social.href}
+                class="hover:text-foreground"
+                target="_blank"
+                rel="noopener noreferrer">
+                {social.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <p class="text-caption-foreground mt-8 text-sm">© 2026 Kenneth Kwakye-Gyamfi · Accra, Ghana</p>
   </div>
 </footer>

@@ -39,7 +39,7 @@ const costString = new Intl.NumberFormat('en', {
 
 const description =
   totalTokens || totalCost
-    ? `${tokenString} tokens, costing around ${costString} thus far`
+    ? `${tokenString} tokens, costing around ${costString} so far`
     : "AI is not going to replace the developer, but rather the developer that doesn't use AI";
 
 const lastRead: string | null = usage.totals?.lastRead
