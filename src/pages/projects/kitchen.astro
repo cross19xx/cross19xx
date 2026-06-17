@@ -1,0 +1,62 @@
+---
+import { ArrowLeftIcon } from "@lucide/astro";
+
+import KitchenCard from "_/components/KitchenCard.astro";
+import PageIntro from "_/components/PageIntro.astro";
+import { PAGE_META } from "_/data/pages";
+import BaseLayout from "_/layouts/Base.astro";
+import type { KitchenProject } from "_/lib/kitchen";
+import { parseKitchenRow } from "_/lib/kitchen";
+import { turso } from "_/turso";
+import { constructPageTitle } from "_/utils/misc";
+
+export const prerender = false;
+
+let projects: KitchenProject[] = [];
+try {
+  const { rows } = await turso.execute("SELECT * FROM kitchen_projects ORDER BY updated_at DESC");
+  projects = rows.map((row) => parseKitchenRow(row as unknown as Record<string, unknown>));
+} catch (error) {
+  console.error("Failed to load kitchen projects:", error);
+  projects = [];
+}
+
+const shipped = projects.filter((p) => {
+  const entries = Object.values(p.platforms);
+  return entries.length > 0 && entries.every((info) => info?.status === "done");
+}).length;
+
+const eyebrow = `Kitchen — ${projects.length} experiment${projects.length === 1 ? "" : "s"}, ${shipped} shipped`;
+const { title, description } = PAGE_META["/projects/kitchen"];
+---
+
+<BaseLayout title={constructPageTitle(title)} description={description}>
+  <PageIntro
+    eyebrow={eyebrow}
+    title="Kitchen"
+    description="Throwaway projects for staying sharp across native Android, iOS, and React Native — each in its own state of done.">
+    <p slot="page-link" class="mb-4">
+      <a
+        href="/projects"
+        class="reveal text-foreground/80 hover:text-foreground inline-flex items-center gap-2 font-mono text-sm">
+        <ArrowLeftIcon class="size-3" /> All Projects
+      </a>
+    </p>
+  </PageIntro>
+
+  <div class="border-border border-t py-12 sm:py-16">
+    <div class="mx-auto max-w-5xl px-6 lg:px-8">
+      {
+        projects.length === 0 ? (
+          <p class="text-muted-foreground">No experiments yet — check back soon.</p>
+        ) : (
+          <ul role="list" class="divide-border divide-y">
+            {projects.map((project, i) => (
+              <KitchenCard project={project} index={i} class="py-10" />
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>
