@@ -1,6 +1,9 @@
 ---
+import androidIcon from '_/assets/icons/android.svg?raw';
+import appleIcon from '_/assets/icons/apple.svg?raw';
+import reactIcon from '_/assets/icons/react.svg?raw';
 import { KITCHEN_PLATFORMS, KITCHEN_STATUS_LABEL } from '_/lib/kitchen';
-import type { KitchenProject, KitchenStatus } from '_/lib/kitchen';
+import type { KitchenPlatformKey, KitchenProject, KitchenStatus } from '_/lib/kitchen';
 import { padNumber } from '_/utils/misc';
 
 interface Props {
@@ -14,6 +17,12 @@ const { project, index, class: className } = Astro.props;
 const statusBadge: Record<KitchenStatus, string> = {
   done: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-400',
   building: 'bg-amber-100 text-amber-800 dark:bg-amber-400/10 dark:text-amber-400',
+};
+
+const platformIcon: Record<KitchenPlatformKey, string> = {
+  android: androidIcon,
+  ios: appleIcon,
+  react_native: reactIcon,
 };
 
 const presentPlatforms = KITCHEN_PLATFORMS.filter((p) => project.platforms[p.key]);
@@ -38,19 +47,25 @@ const presentPlatforms = KITCHEN_PLATFORMS.filter((p) => project.platforms[p.key
       {
         presentPlatforms.map((p) => {
           const info = project.platforms[p.key]!;
-          const label = `${p.label} · ${KITCHEN_STATUS_LABEL[info.status]}`;
-          const badgeClass = `rounded-sm px-2.5 py-0.5 text-xs font-medium ${statusBadge[info.status]}`;
+          const statusLabel = KITCHEN_STATUS_LABEL[info.status];
+          const badgeClass = `inline-flex items-center gap-1.5 rounded-sm px-2.5 py-0.5 text-xs font-medium ${statusBadge[info.status]}`;
           return info.url ? (
             <a
               href={info.url}
               target="_blank"
               rel="noopener noreferrer"
+              title={p.label}
               aria-label={`${project.title} — ${p.label} source on GitHub (opens in a new tab)`}
               class:list={[badgeClass, 'hover:underline']}>
-              {label}
+              <span class="inline-flex shrink-0" set:html={platformIcon[p.key]} />
+              {statusLabel}
             </a>
           ) : (
-            <span class={badgeClass}>{label}</span>
+            <span class={badgeClass} title={p.label}>
+              <span class="inline-flex shrink-0" set:html={platformIcon[p.key]} />
+              <span class="sr-only">{p.label}: </span>
+              {statusLabel}
+            </span>
           );
         })
       }
