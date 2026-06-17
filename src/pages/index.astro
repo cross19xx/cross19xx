@@ -48,6 +48,9 @@ const posts = (await getCollection('blog'))
 <BaseLayout
   title="Kenneth Kwakye-Gyamfi - Software Engineer + Photographer"
   description="Kenneth Kwakye-Gyamfi is a senior mobile & web full stack engineer, husband, father, photographer, and a proud Ghanaian.">
+  <!-- Opt this page out of the global reveal observer; Motion drives reveals below. -->
+  <div data-motion-reveals hidden></div>
+
   <!-- Hero section -->
   <section class="pt-24 pb-20 sm:pt-32 sm:pb-28">
     <div class="mx-auto max-w-5xl px-6 lg:px-8">
@@ -251,3 +254,76 @@ const posts = (await getCollection('blog'))
     </div>
   </section>
 </BaseLayout>
+
+<!-- Scroll-choreography prototype: homepage reveal overrides -->
+<style is:global>
+  /* The homepage drives reveals with Motion (see script), so neutralise the
+     global IntersectionObserver reveal here: Motion owns the initial + final
+     state and the two systems never fight over opacity/transform. Scoped to
+     this page via :has() on the marker, and gated by reduced-motion to match
+     the rest of the site (reduced-motion users get static, visible content). */
+  @media (prefers-reduced-motion: no-preference) {
+    html:has([data-motion-reveals]) .reveal {
+      opacity: 0;
+      translate: none;
+      transition: none;
+    }
+    /* Text/UI rise + scale in; photos fade only (parallax owns their transform). */
+    html:has([data-motion-reveals]) .reveal:not(figure) {
+      transform: translateY(16px) scale(0.985);
+    }
+  }
+</style>
+
+<script>
+  import { animate, inView, scroll } from 'motion';
+
+  const initScrollChoreography = () => {
+    // Only the homepage opts in (the marker is rendered on this page only), and
+    // never under reduced-motion — matches the site's existing convention.
+    if (!document.querySelector('[data-motion-reveals]')) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // 1) Spring reveals, staggered per section as each scrolls into view.
+    inView(
+      'section',
+      (section) => {
+        const reveals = Array.from(section.querySelectorAll<HTMLElement>('.reveal'));
+        reveals.forEach((el, i) => {
+          const delay = i * 0.06;
+          if (el.matches('figure')) {
+            // Photos fade only — the parallax below owns their transform.
+            animate(el, { opacity: [0, 1] }, { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] });
+          } else {
+            animate(
+              el,
+              { opacity: [0, 1], y: [16, 0], scale: [0.985, 1] },
+              { type: 'spring', stiffness: 130, damping: 18, delay },
+            );
+          }
+        });
+      },
+      { amount: 0.15 },
+    );
+
+    // 2) Subtle scroll-linked parallax on the photography grid.
+    const gallery = document.querySelector('#photography');
+    if (gallery) {
+      const figures = Array.from(gallery.querySelectorAll<HTMLElement>('figure'));
+      scroll(
+        (progress: number) => {
+          for (let i = 0; i < figures.length; i++) {
+            // Centred at the section midpoint; columns drift at slightly
+            // different rates so the grid reads as layered, not a single sheet.
+            const range = 14 + (i % 3) * 6;
+            const y = (0.5 - progress) * range;
+            figures[i].style.transform = `translateY(${y.toFixed(2)}px)`;
+          }
+        },
+        { target: gallery, offset: ['start end', 'end start'] },
+      );
+    }
+  };
+
+  document.addEventListener('astro:page-load', initScrollChoreography);
+</script>

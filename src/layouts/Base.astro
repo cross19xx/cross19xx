@@ -68,18 +68,22 @@ const { description, title, image } = Astro.props;
 
       const handlePageLoad = () => {
         // Scroll reveal, responsible for adding `.reveal-visible` to elements that are visible in the viewport
-        const revealObserver = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('reveal-visible');
-                revealObserver.unobserve(entry.target);
+        // The homepage opts out (via the [data-motion-reveals] marker) and
+        // drives its own spring reveals with Motion — see src/pages/index.astro.
+        if (!document.querySelector('[data-motion-reveals]')) {
+          const revealObserver = new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('reveal-visible');
+                  revealObserver.unobserve(entry.target);
+                }
               }
-            }
-          },
-          { threshold: 0.1, rootMargin: '0px 0px -40px 0px' },
-        );
-        document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+            },
+            { threshold: 0.1, rootMargin: '0px 0px -40px 0px' },
+          );
+          document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+        }
 
         handleMobileNavigation();
       };
