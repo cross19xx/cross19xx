@@ -41,7 +41,12 @@ const presentPlatforms = KITCHEN_PLATFORMS.filter((p) => project.platforms[p.key
           const label = `${p.label} · ${KITCHEN_STATUS_LABEL[info.status]}`;
           const badgeClass = `rounded-sm px-2.5 py-0.5 text-xs font-medium ${statusBadge[info.status]}`;
           return info.url ? (
-            <a href={info.url} class:list={[badgeClass, 'hover:underline']}>
+            <a
+              href={info.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${project.title} — ${p.label} source on GitHub (opens in a new tab)`}
+              class:list={[badgeClass, 'hover:underline']}>
               {label}
             </a>
           ) : (
