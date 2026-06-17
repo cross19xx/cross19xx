@@ -13,7 +13,7 @@ export interface Project {
 export const projects: Project[] = [
   {
     name: 'Kitchen',
-    link: 'https://www.github.com/cross19xx/Kitchen-Android',
+    link: '/projects/kitchen',
     status: 'In Progress',
     summary:
       'A collection of throwaway projects tackling complex topics in Native Android, Native iOS, and React Native',
