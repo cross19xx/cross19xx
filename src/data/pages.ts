@@ -15,42 +15,42 @@ export interface PageMeta {
 }
 
 export const PAGE_META = {
-  "/": {
-    title: "Kenneth Kwakye-Gyamfi",
+  '/': {
+    title: 'Kenneth Kwakye-Gyamfi',
     description:
-      "Kenneth Kwakye-Gyamfi is a senior mobile & web full stack engineer, husband, father, photographer, and a proud Ghanaian.",
+      'Kenneth Kwakye-Gyamfi is a senior mobile & web full stack engineer, husband, father, photographer, and a proud Ghanaian.',
   },
-  "/about": {
-    title: "About",
-    description: "Full stack mobile and web developer and photographer based in Accra, Ghana.",
+  '/about': {
+    title: 'About',
+    description: 'Full stack mobile and web developer and photographer based in Accra, Ghana.',
   },
-  "/projects": {
-    title: "Projects",
-    description: "Apps, tools, and ideas in various states of done.",
+  '/projects': {
+    title: 'Projects',
+    description: 'Apps, tools, and ideas in various states of done.',
   },
-  "/projects/kitchen": {
-    title: "Kitchen",
-    description: "Throwaway native Android, iOS, and React Native projects for staying sharp.",
+  '/projects/kitchen': {
+    title: 'Kitchen',
+    description: 'Throwaway native Android, iOS, and React Native projects for staying sharp.',
   },
-  "/photography": {
-    title: "Photography",
-    description: "Albums from Accra, the Ghanaian coast, and beyond.",
+  '/photography': {
+    title: 'Photography',
+    description: 'Albums from Accra, the Ghanaian coast, and beyond.',
   },
-  "/blog": {
-    title: "Writing",
-    description: "Notes on building software, making pictures, life and the places they overlap.",
+  '/blog': {
+    title: 'Writing',
+    description: 'Notes on building software, making pictures, life and the places they overlap.',
   },
-  "/uses": {
-    title: "Uses",
-    description: "The hardware, software, and camera gear I actually reach for.",
+  '/uses': {
+    title: 'Uses',
+    description: 'The hardware, software, and camera gear I actually reach for.',
   },
-  "/404": {
-    title: "Page not found",
-    description: "That link may be broken or the page may have moved.",
+  '/404': {
+    title: 'Page not found',
+    description: 'That link may be broken or the page may have moved.',
   },
-  "/token-usage": {
-    title: "Token Usage",
-    description: "A comprehensive breakdown of my AI token usage",
+  '/token-usage': {
+    title: 'Token Usage',
+    description: 'A comprehensive breakdown of my AI token usage',
   },
 };
 

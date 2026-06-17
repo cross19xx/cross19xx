@@ -1,4 +1,4 @@
-import { createClient } from "@libsql/client/web";
+import { createClient } from '@libsql/client/web';
 
 export const CREATE_TABLE_SQL = `
 CREATE TABLE IF NOT EXISTS kitchen_projects (
@@ -10,22 +10,22 @@ CREATE TABLE IF NOT EXISTS kitchen_projects (
   updated_at  INTEGER NOT NULL
 );`;
 
-const STATUSES = new Set(["building", "done"]);
-const PLATFORM_STATUS_FLAGS = { android: "android", ios: "ios", rn: "react_native" };
-const PLATFORM_URL_FLAGS = { "android-url": "android", "ios-url": "ios", "rn-url": "react_native" };
+const STATUSES = new Set(['building', 'done']);
+const PLATFORM_STATUS_FLAGS = { android: 'android', ios: 'ios', rn: 'react_native' };
+const PLATFORM_URL_FLAGS = { 'android-url': 'android', 'ios-url': 'ios', 'rn-url': 'react_native' };
 
-const flagFor = (key) => (key === "react_native" ? "rn" : key);
+const flagFor = (key) => (key === 'react_native' ? 'rn' : key);
 
 export function parseArgs(argv) {
   const [command, ...rest] = argv;
-  if (!["set", "list", "rm"].includes(command)) {
-    throw new Error(`Unknown command "${command ?? ""}". Use: set | list | rm`);
+  if (!['set', 'list', 'rm'].includes(command)) {
+    throw new Error(`Unknown command "${command ?? ''}". Use: set | list | rm`);
   }
-  if (command === "list") return { command };
+  if (command === 'list') return { command };
 
   const slug = rest[0];
-  if (!slug || slug.startsWith("--")) throw new Error(`${command} requires a <slug>`);
-  if (command === "rm") return { command, slug };
+  if (!slug || slug.startsWith('--')) throw new Error(`${command} requires a <slug>`);
+  if (command === 'rm') return { command, slug };
 
   const fields = {};
   const platforms = {};
@@ -33,17 +33,17 @@ export function parseArgs(argv) {
 
   for (let i = 0; i < flags.length; i++) {
     const flag = flags[i];
-    if (!flag.startsWith("--")) throw new Error(`Unexpected argument "${flag}"`);
+    if (!flag.startsWith('--')) throw new Error(`Unexpected argument "${flag}"`);
     const name = flag.slice(2);
     const value = flags[++i];
-    if (value === undefined || value.startsWith("--"))
+    if (value === undefined || value.startsWith('--'))
       throw new Error(`Flag "${flag}" needs a value`);
 
-    if (name === "title") fields.title = value;
-    else if (name === "summary") fields.summary = value;
-    else if (name === "tags")
+    if (name === 'title') fields.title = value;
+    else if (name === 'summary') fields.summary = value;
+    else if (name === 'tags')
       fields.tags = value
-        .split(",")
+        .split(',')
         .map((t) => t.trim())
         .filter(Boolean);
     else if (PLATFORM_STATUS_FLAGS[name]) {
@@ -95,7 +95,7 @@ export function buildSetValues(existing, parsed, now) {
 
 async function loadExisting(client, slug) {
   const { rows } = await client.execute({
-    sql: "SELECT * FROM kitchen_projects WHERE slug = ?",
+    sql: 'SELECT * FROM kitchen_projects WHERE slug = ?',
     args: [slug],
   });
   if (rows.length === 0) return null;
@@ -104,8 +104,8 @@ async function loadExisting(client, slug) {
     slug: String(row.slug),
     title: String(row.title),
     summary: String(row.summary),
-    tags: JSON.parse(String(row.tags ?? "[]")),
-    platforms: JSON.parse(String(row.platforms ?? "{}")),
+    tags: JSON.parse(String(row.tags ?? '[]')),
+    platforms: JSON.parse(String(row.platforms ?? '{}')),
   };
 }
 
@@ -113,7 +113,7 @@ async function main() {
   const url = process.env.TURSO_DATABASE_URL;
   const authToken = process.env.TURSO_AUTH_TOKEN;
   if (!url || !authToken) {
-    console.error("TURSO_DATABASE_URL / TURSO_AUTH_TOKEN are not set. Add them to .env");
+    console.error('TURSO_DATABASE_URL / TURSO_AUTH_TOKEN are not set. Add them to .env');
     process.exit(1);
   }
 
@@ -122,28 +122,28 @@ async function main() {
 
   const parsed = parseArgs(process.argv.slice(2));
 
-  if (parsed.command === "list") {
+  if (parsed.command === 'list') {
     const { rows } = await client.execute(
-      "SELECT slug, title, platforms, updated_at FROM kitchen_projects ORDER BY updated_at DESC",
+      'SELECT slug, title, platforms, updated_at FROM kitchen_projects ORDER BY updated_at DESC',
     );
     if (rows.length === 0) {
-      console.log("No kitchen projects yet.");
+      console.log('No kitchen projects yet.');
       return;
     }
     for (const row of rows) {
-      const platforms = JSON.parse(String(row.platforms ?? "{}"));
+      const platforms = JSON.parse(String(row.platforms ?? '{}'));
       const summary =
         Object.entries(platforms)
           .map(([k, v]) => `${k}:${v.status}`)
-          .join(", ") || "(no platforms)";
+          .join(', ') || '(no platforms)';
       console.log(`${String(row.slug).padEnd(24)} ${String(row.title).padEnd(24)} ${summary}`);
     }
     return;
   }
 
-  if (parsed.command === "rm") {
+  if (parsed.command === 'rm') {
     await client.execute({
-      sql: "DELETE FROM kitchen_projects WHERE slug = ?",
+      sql: 'DELETE FROM kitchen_projects WHERE slug = ?',
       args: [parsed.slug],
     });
     console.log(`Removed "${parsed.slug}".`);

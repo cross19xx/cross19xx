@@ -1,7 +1,7 @@
 ---
-import { KITCHEN_PLATFORMS, KITCHEN_STATUS_LABEL } from "_/lib/kitchen";
-import type { KitchenProject, KitchenStatus } from "_/lib/kitchen";
-import { padNumber } from "_/utils/misc";
+import { KITCHEN_PLATFORMS, KITCHEN_STATUS_LABEL } from '_/lib/kitchen';
+import type { KitchenProject, KitchenStatus } from '_/lib/kitchen';
+import { padNumber } from '_/utils/misc';
 
 interface Props {
   project: KitchenProject;
@@ -12,8 +12,8 @@ interface Props {
 const { project, index, class: className } = Astro.props;
 
 const statusBadge: Record<KitchenStatus, string> = {
-  done: "bg-emerald-100 text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-400",
-  building: "bg-amber-100 text-amber-800 dark:bg-amber-400/10 dark:text-amber-400",
+  done: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-400',
+  building: 'bg-amber-100 text-amber-800 dark:bg-amber-400/10 dark:text-amber-400',
 };
 
 const presentPlatforms = KITCHEN_PLATFORMS.filter((p) => project.platforms[p.key]);

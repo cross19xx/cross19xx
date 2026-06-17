@@ -1,4 +1,4 @@
-import { createClient } from "@libsql/client/web";
+import { createClient } from '@libsql/client/web';
 
 // `import.meta.env` is populated at build time (content-collection loaders);
 // `process.env` is populated at request time on Vercel (the on-demand
