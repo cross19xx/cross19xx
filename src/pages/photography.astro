@@ -2,10 +2,10 @@
 import { getCollection, type InferEntrySchema } from 'astro:content';
 
 import BlurImage from '_/components/BlurImage.astro';
+import ContactRow from '_/components/ContactRow.astro';
 import Lightbox from '_/components/Lightbox.astro';
 import PageIntro from '_/components/PageIntro.astro';
 import { PAGE_META } from '_/data/pages';
-import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
 import { constructPageTitle, MASONRY_BREAKPOINTS } from '_/utils/misc';
 
@@ -155,19 +155,7 @@ const chipClass =
   </div>
 
   <!-- Prints -->
-  <section class="border-border/50 border-t py-16 sm:py-20">
-    <div class="mx-auto max-w-5xl px-6 lg:px-8">
-      <h2
-        class="reveal max-w-[24ch] text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
-        Most frames are available as prints.
-      </h2>
-      <a
-        href={`mailto:${EMAIL}?subject=Print%20enquiry`}
-        class="reveal decoration-border hover:decoration-foreground mt-6 inline-block text-lg font-medium underline underline-offset-4 [--reveal-delay:100ms]">
-        {EMAIL}
-      </a>
-    </div>
-  </section>
+  <ContactRow message="Most frames are available as prints." />
 
   <Lightbox />
 </BaseLayout>

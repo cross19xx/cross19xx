@@ -1,0 +1,92 @@
+---
+import { CheckIcon } from '@lucide/astro';
+
+import { EMAIL } from '_/data/site';
+import { blobUrl } from '_/utils/misc';
+
+interface Props {
+  message: string;
+  description?: string;
+  eyebrow?: string;
+}
+
+const {
+  message = "Have a project in mind — or a print you'd like on your wall?",
+  description,
+  eyebrow,
+} = Astro.props;
+---
+
+<section id="contact" class="border-border scroll-mt-24 border-t py-20 sm:py-28">
+  <div class="mx-auto max-w-5xl px-6 lg:px-8">
+    {
+      eyebrow && (
+        <p class="text-caption-foreground font-mono text-sm tracking-wide uppercase">{eyebrow}</p>
+      )
+    }
+    <h2
+      class="reveal mt-6 max-w-[24ch] text-3xl font-semibold tracking-tight text-balance [--reveal-delay:100ms] sm:text-4xl">
+      {message}
+    </h2>
+    {
+      description && (
+        <p class="reveal text-muted-foreground mt-4 max-w-[55ch] text-base text-pretty [--reveal-delay:100ms]">
+          {description}
+        </p>
+      )
+    }
+    <div class="reveal mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 [--reveal-delay:200ms]">
+      <a
+        href={`mailto:${EMAIL}`}
+        class="decoration-border hover:decoration-foreground text-xl font-medium underline underline-offset-4 sm:text-2xl">
+        {EMAIL}
+      </a>
+      <button
+        type="button"
+        data-copy-email
+        data-email={EMAIL}
+        aria-live="polite"
+        class="border-border text-muted-foreground hover:text-foreground hover:border-foreground/40 inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors">
+        <span data-copy-label>Copy</span>
+        <CheckIcon class="hidden size-3.5" data-copy-check aria-hidden="true" />
+      </button>
+    </div>
+    <p class="reveal text-muted-foreground mt-6 text-sm [--reveal-delay:300ms]">
+      or <a
+        href={blobUrl('Kenneth_Kwakye-Gyamfi_Resume.pdf')}
+        target="_blank"
+        class="text-foreground decoration-border hover:decoration-foreground underline underline-offset-4"
+        >download my résumé (PDF) ↗</a
+      >.
+    </p>
+  </div>
+</section>
+
+<script>
+  // Copy-to-clipboard for contact email. visible mailto:link is available if Clipboard API is unavailable.
+  const initCopyEmail = () => {
+    const button = document.querySelector<HTMLButtonElement>('[data-copy-email]');
+    if (!button) return;
+    const label = button.querySelector<HTMLElement>('[data-copy-label]');
+    const check = button.querySelector<SVGElement>('[data-copy-check]');
+    const email = button.dataset.email ?? '';
+    let resetTimer = 0;
+
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(email);
+      } catch {
+        return; // Clipboard blocked — the visible mailto link still works.
+      }
+      if (label) label.textContent = 'Copied';
+      if (check) check.classList.remove('hidden');
+      window.clearTimeout(resetTimer);
+      resetTimer = window.setTimeout(() => {
+        if (label) label.textContent = 'Copy';
+        if (check) check.classList.add('hidden');
+      }, 2000);
+    });
+  };
+
+  document.addEventListener('astro:page-load', initCopyEmail);
+</script>

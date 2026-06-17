@@ -1,10 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 
+import ContactRow from '_/components/ContactRow.astro';
 import PageIntro from '_/components/PageIntro.astro';
 import PostRow from '_/components/PostRow.astro';
 import { PAGE_META } from '_/data/pages';
-import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
 import { constructPageTitle } from '_/utils/misc';
 
@@ -84,24 +84,10 @@ const eyebrow = `Notes — ${posts.length} posts, ${years.length} years`;
   </section>
 
   <!-- Subscribe / contact -->
-  <section class="border-border border-t py-16 sm:py-20">
-    <div class="mx-auto max-w-5xl px-6 lg:px-8">
-      <h2
-        class="reveal max-w-[24ch] text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
-        Want to know when something new lands?
-      </h2>
-      <p
-        class="reveal text-muted-foreground mt-4 max-w-[55ch] text-base text-pretty [--reveal-delay:100ms]">
-        No newsletter machinery yet — an email works. Say hello and I'll let you know when the next
-        note is up.
-      </p>
-      <a
-        href={`mailto:${EMAIL}?subject=Writing`}
-        class="reveal decoration-border hover:decoration-foreground mt-6 inline-block text-lg font-medium underline underline-offset-4 [--reveal-delay:200ms]">
-        {EMAIL}
-      </a>
-    </div>
-  </section>
+  <ContactRow
+    message="Want to know when something new lands?"
+    description="No newsletter machinery yet — an email works. Say hello and I'll let you know when the next note is up."
+  />
 
   <script>
     // Topic filtering — delegated and queried at call time (ClientRouter-safe)

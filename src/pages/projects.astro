@@ -1,4 +1,5 @@
 ---
+import ContactRow from '_/components/ContactRow.astro';
 import PageIntro from '_/components/PageIntro.astro';
 import ProjectRow from '_/components/ProjectRow.astro';
 import { PAGE_META } from '_/data/pages';
@@ -28,7 +29,8 @@ const { title, description: pageDescription } = PAGE_META['/projects'];
   </div>
 
   <!-- Collaborate -->
-  <section class="border-border border-t py-16 sm:py-20">
+  <ContactRow message="See something worth building together?" />
+  <!-- <section class="border-border border-t py-16 sm:py-20">
     <div class="mx-auto max-w-5xl px-6 lg:px-8">
       <h2
         class="reveal max-w-[24ch] text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
@@ -40,5 +42,5 @@ const { title, description: pageDescription } = PAGE_META['/projects'];
         {EMAIL}
       </a>
     </div>
-  </section>
+  </section> -->
 </BaseLayout>
