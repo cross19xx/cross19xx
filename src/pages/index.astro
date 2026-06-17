@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 
-import { ArrowRightIcon, ExternalLinkIcon } from '@lucide/astro';
+import { ArrowRightIcon, CheckIcon, ExternalLinkIcon } from '@lucide/astro';
 
 import HomeSection from '_/components/HomeSection.astro';
 import PostRow from '_/components/PostRow.astro';
@@ -11,7 +11,7 @@ import { getFeaturedPhotos } from '_/data/photos';
 import { projects } from '_/data/projects';
 import { EMAIL } from '_/data/site';
 import BaseLayout from '_/layouts/Base.astro';
-import { MASONRY_BREAKPOINTS, blobUrl, padNumber } from '_/utils/misc';
+import { blobUrl, MASONRY_BREAKPOINTS, padNumber } from '_/utils/misc';
 
 import { Masonry } from 'astro-masonry';
 
@@ -141,11 +141,29 @@ const posts = (await getCollection('blog'))
     </ul>
   </HomeSection>
 
+  <!-- Blog/Writing -->
+  <HomeSection
+    id="writing"
+    title="Writing"
+    eyebrow="02 / Notes"
+    description="Occasional notes on building software, making pictures, and the places the two overlap."
+    link={{ text: 'All Posts', href: '/blog' }}>
+    <ul role="list" class="divide-border/50 mt-8 divide-y">
+      {
+        posts.map((post) => (
+          <li class="reveal">
+            <PostRow post={post} />
+          </li>
+        ))
+      }
+    </ul>
+  </HomeSection>
+
   <!-- Photography -->
   <HomeSection
     id="photography"
     title="Photography"
-    eyebrow="02 / Field Notes"
+    eyebrow="03 / Field Notes"
     description="Code pays the bills; photography keeps the eye sharp — the same sense of light, framing, and timing I bring to the interfaces I build. A rolling selection from Accra and wherever the road goes.">
     <Masonry breakpointCols={MASONRY_BREAKPOINTS} class="mt-12 gap-4">
       {
@@ -184,24 +202,6 @@ const posts = (await getCollection('blog'))
         Instagram <ExternalLinkIcon class="size-3" />
       </a>
     </div>
-  </HomeSection>
-
-  <!-- Blog/Writing -->
-  <HomeSection
-    id="writing"
-    title="Writing"
-    eyebrow="03 / Notes"
-    description="Occasional notes on building software, making pictures, and the places the two overlap."
-    link={{ text: 'All Posts', href: '/blog' }}>
-    <ul role="list" class="divide-border/50 mt-8 divide-y">
-      {
-        posts.map((post) => (
-          <li class="reveal">
-            <PostRow post={post} />
-          </li>
-        ))
-      }
-    </ul>
   </HomeSection>
 
   <!-- About -->
@@ -243,11 +243,22 @@ const posts = (await getCollection('blog'))
         class="reveal mt-6 max-w-[24ch] text-3xl font-semibold tracking-tight text-balance [--reveal-delay:100ms] sm:text-4xl">
         Have a project in mind — or a print you'd like on your wall?
       </h2>
-      <a
-        href={`mailto:${EMAIL}`}
-        class="reveal decoration-border hover:decoration-foreground mt-8 inline-block text-xl font-medium underline underline-offset-4 [--reveal-delay:200ms] sm:text-2xl">
-        {EMAIL}
-      </a>
+      <div class="reveal mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 [--reveal-delay:200ms]">
+        <a
+          href={`mailto:${EMAIL}`}
+          class="decoration-border hover:decoration-foreground text-xl font-medium underline underline-offset-4 sm:text-2xl">
+          {EMAIL}
+        </a>
+        <button
+          type="button"
+          data-copy-email
+          data-email={EMAIL}
+          aria-live="polite"
+          class="border-border text-muted-foreground hover:text-foreground hover:border-foreground/40 inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors">
+          <span data-copy-label>Copy</span>
+          <CheckIcon class="hidden size-3.5" data-copy-check aria-hidden="true" />
+        </button>
+      </div>
       <p class="reveal text-muted-foreground mt-6 text-sm [--reveal-delay:300ms]">
         Or <a
           href={blobUrl('Kenneth_Kwakye-Gyamfi_Resume.pdf')}
@@ -331,4 +342,33 @@ const posts = (await getCollection('blog'))
   };
 
   document.addEventListener('astro:page-load', initScrollChoreography);
+</script>
+
+<script>
+  // Copy-to-clipboard for contact email. visible mailto:link is available if Clipboard API is unavailable.
+  const initCopyEmail = () => {
+    const button = document.querySelector<HTMLButtonElement>('[data-copy-email]');
+    if (!button) return;
+    const label = button.querySelector<HTMLElement>('[data-copy-label]');
+    const check = button.querySelector<SVGElement>('[data-copy-check]');
+    const email = button.dataset.email ?? '';
+    let resetTimer = 0;
+
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(email);
+      } catch {
+        return; // Clipboard blocked — the visible mailto link still works.
+      }
+      if (label) label.textContent = 'Copied';
+      if (check) check.classList.remove('hidden');
+      window.clearTimeout(resetTimer);
+      resetTimer = window.setTimeout(() => {
+        if (label) label.textContent = 'Copy';
+        if (check) check.classList.add('hidden');
+      }, 2000);
+    });
+  };
+
+  document.addEventListener('astro:page-load', initCopyEmail);
 </script>
