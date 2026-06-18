@@ -19,7 +19,8 @@ const isActive = (href: string) => {
     : path === base ||
         (base === '/blog' && path.startsWith('/posts')) ||
         (base === '/photography' && path.startsWith('/albums')) ||
-        (base === '/about' && path === '/now');
+        (base === '/about' && path === '/now') ||
+        (base === '/projects' && path.startsWith('/projects'));
 };
 
 const desktopLink =
