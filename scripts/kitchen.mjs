@@ -13,8 +13,16 @@ CREATE TABLE IF NOT EXISTS kitchen_projects (
 const STATUSES = new Set(['building', 'done']);
 const PLATFORM_STATUS_FLAGS = { android: 'android', ios: 'ios', rn: 'react_native' };
 const PLATFORM_URL_FLAGS = { 'android-url': 'android', 'ios-url': 'ios', 'rn-url': 'react_native' };
+const PLATFORM_KEYS = new Set(['android', 'ios', 'react_native']);
 
 const flagFor = (key) => (key === 'react_native' ? 'rn' : key);
+
+function resolvePlatform(token) {
+  const key = PLATFORM_STATUS_FLAGS[token] ?? token;
+  if (!PLATFORM_KEYS.has(key))
+    throw new Error(`Unknown platform "${token}". Use: android | ios | rn`);
+  return key;
+}
 
 export function parseArgs(argv) {
   const [command, ...rest] = argv;
@@ -25,7 +33,11 @@ export function parseArgs(argv) {
 
   const slug = rest[0];
   if (!slug || slug.startsWith('--')) throw new Error(`${command} requires a <slug>`);
-  if (command === 'rm') return { command, slug };
+  if (command === 'rm') {
+    const platformToken = rest[1];
+    if (platformToken === undefined) return { command, slug };
+    return { command, slug, platform: resolvePlatform(platformToken) };
+  }
 
   const fields = {};
   const platforms = {};
@@ -73,6 +85,11 @@ export function mergePlatforms(existing, patches) {
     merged[key] = url ? { status, url } : { status };
   }
   return merged;
+}
+
+export function removePlatform(platforms, key) {
+  const { [key]: _removed, ...rest } = platforms;
+  return rest;
 }
 
 export function buildSetValues(existing, parsed, now) {
@@ -142,11 +159,30 @@ async function main() {
   }
 
   if (parsed.command === 'rm') {
+    if (!parsed.platform) {
+      await client.execute({
+        sql: 'DELETE FROM kitchen_projects WHERE slug = ?',
+        args: [parsed.slug],
+      });
+      console.log(`Removed "${parsed.slug}".`);
+      return;
+    }
+
+    const existing = await loadExisting(client, parsed.slug);
+    if (!existing) {
+      console.error(`No project "${parsed.slug}".`);
+      process.exit(1);
+    }
+    if (!(parsed.platform in existing.platforms)) {
+      console.log(`"${parsed.slug}" has no ${parsed.platform} platform; nothing to remove.`);
+      return;
+    }
+    const platforms = removePlatform(existing.platforms, parsed.platform);
     await client.execute({
-      sql: 'DELETE FROM kitchen_projects WHERE slug = ?',
-      args: [parsed.slug],
+      sql: 'UPDATE kitchen_projects SET platforms = ?, updated_at = ? WHERE slug = ?',
+      args: [JSON.stringify(platforms), Date.now(), parsed.slug],
     });
-    console.log(`Removed "${parsed.slug}".`);
+    console.log(`Removed ${parsed.platform} from "${parsed.slug}".`);
     return;
   }
 

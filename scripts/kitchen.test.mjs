@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { buildSetValues, mergePlatforms, parseArgs } from './kitchen.mjs';
+import { buildSetValues, mergePlatforms, parseArgs, removePlatform } from './kitchen.mjs';
 
 test('parseArgs: set with metadata and a platform', () => {
   const parsed = parseArgs([
@@ -40,6 +40,38 @@ test('parseArgs: --rn maps to react_native', () => {
 test('parseArgs: list and rm', () => {
   assert.deepEqual(parseArgs(['list']), { command: 'list' });
   assert.deepEqual(parseArgs(['rm', 'foo']), { command: 'rm', slug: 'foo' });
+});
+
+test('parseArgs: rm with a platform arg', () => {
+  assert.deepEqual(parseArgs(['rm', 'foo', 'android']), {
+    command: 'rm',
+    slug: 'foo',
+    platform: 'android',
+  });
+});
+
+test('parseArgs: rm platform arg --rn maps to react_native', () => {
+  assert.deepEqual(parseArgs(['rm', 'foo', 'rn']), {
+    command: 'rm',
+    slug: 'foo',
+    platform: 'react_native',
+  });
+});
+
+test('parseArgs: rm rejects an unknown platform', () => {
+  assert.throws(() => parseArgs(['rm', 'foo', 'bogus']), /Unknown platform "bogus"/);
+});
+
+test('removePlatform: drops the key and keeps the others without mutating', () => {
+  const existing = { android: { status: 'done' }, ios: { status: 'building' } };
+  const result = removePlatform(existing, 'android');
+  assert.deepEqual(result, { ios: { status: 'building' } });
+  assert.deepEqual(existing, { android: { status: 'done' }, ios: { status: 'building' } });
+});
+
+test('removePlatform: returns a no-op copy when the platform is absent', () => {
+  const existing = { ios: { status: 'building' } };
+  assert.deepEqual(removePlatform(existing, 'android'), { ios: { status: 'building' } });
 });
 
 test('mergePlatforms: adds a new platform with status', () => {
