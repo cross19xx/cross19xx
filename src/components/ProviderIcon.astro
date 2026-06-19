@@ -1,0 +1,28 @@
+---
+import antigravityIcon from '_/assets/icons/antigravity.svg?raw';
+import anthropicIcon from '_/assets/icons/claude.svg?raw';
+import geminiIcon from '_/assets/icons/gemini.svg?raw';
+import glmIcon from '_/assets/icons/glm.svg?raw';
+import kimiIcon from '_/assets/icons/kimi.svg?raw';
+import openaiIcon from '_/assets/icons/openai.svg?raw';
+
+import type { ProviderKey } from '_/utils/models';
+
+interface Props {
+  provider: ProviderKey;
+  class?: string;
+}
+
+const ICONS: Record<ProviderKey, string> = {
+  antigravity: antigravityIcon,
+  anthropic: anthropicIcon,
+  gemini: geminiIcon,
+  glm: glmIcon,
+  kimi: kimiIcon,
+  openai: openaiIcon,
+};
+
+const { provider, class: className } = Astro.props;
+---
+
+<span class={className} set:html={ICONS[provider]} />

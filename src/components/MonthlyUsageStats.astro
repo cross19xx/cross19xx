@@ -1,0 +1,109 @@
+---
+import ProviderIcon from '_/components/ProviderIcon.astro';
+import { getModelDetails } from '_/utils/models';
+import type { MonthlyStats } from '_/utils/usage-stats';
+
+interface Props {
+  stats: MonthlyStats;
+}
+
+const { stats } = Astro.props;
+
+const compact = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
+const usd2 = new Intl.NumberFormat('en', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 2,
+});
+const usd0 = new Intl.NumberFormat('en', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+});
+
+const top = stats.topModel ? getModelDetails(stats.topModel.modelName) : null;
+const topSharePct = stats.topModel ? Math.round(stats.topModel.share * 100) : 0;
+
+const delta = stats.vsLastMonth;
+const deltaAbs = delta ? Math.abs(Math.round(delta.deltaPct)) : 0;
+const deltaArrow = delta?.direction === 'down' ? '↓' : delta?.direction === 'up' ? '↑' : '→';
+---
+
+<section class="mx-auto max-w-5xl px-6 pb-2 lg:px-8">
+  <div
+    class="border-border/50 bg-border/50 grid grid-cols-2 gap-px overflow-hidden rounded-xl border lg:grid-cols-4">
+    <div class="bg-background p-4 lg:p-5">
+      <p class="text-caption-foreground text-xs tracking-wide uppercase">
+        {stats.mtd.monthLabel} so far
+      </p>
+      <p class="mt-2 font-mono text-2xl font-semibold tracking-tight">
+        {usd2.format(stats.mtd.cost)}
+      </p>
+      <p class="text-caption-foreground mt-1 font-mono text-xs">
+        {compact.format(stats.mtd.tokens)} tokens · {stats.mtd.activeDays} active {
+          stats.mtd.activeDays === 1 ? 'day' : 'days'
+        }
+      </p>
+    </div>
+
+    <div class="bg-background p-4 lg:p-5">
+      <p class="text-caption-foreground text-xs tracking-wide uppercase">vs last month</p>
+      {
+        delta ? (
+          <>
+            <p class="mt-2 font-mono text-2xl font-semibold tracking-tight">
+              {deltaArrow} {deltaAbs}%
+            </p>
+            <p class="text-caption-foreground mt-1 font-mono text-xs">
+              vs {usd0.format(delta.lastSamePointCost)} by this point in {delta.lastMonthLabel}
+            </p>
+          </>
+        ) : (
+          <>
+            <p class="text-muted-foreground mt-2 font-mono text-2xl font-semibold tracking-tight">
+              —
+            </p>
+            <p class="text-caption-foreground mt-1 font-mono text-xs">not enough history yet</p>
+          </>
+        )
+      }
+    </div>
+
+    <div class="bg-background p-4 lg:p-5">
+      <p class="text-caption-foreground text-xs tracking-wide uppercase">On pace for</p>
+      <p class="mt-2 font-mono text-2xl font-semibold tracking-tight">
+        {usd0.format(stats.projection.cost)}
+      </p>
+      <p class="text-caption-foreground mt-1 font-mono text-xs">
+        ~{compact.format(stats.projection.tokens)} tokens projected
+      </p>
+    </div>
+
+    <div class="bg-background p-4 lg:p-5">
+      <p class="text-caption-foreground text-xs tracking-wide uppercase">Top model</p>
+      {
+        top ? (
+          <>
+            <p class="mt-2 flex items-center gap-2 text-lg font-semibold tracking-tight">
+              {top.provider && (
+                <ProviderIcon
+                  provider={top.provider}
+                  class="inline-flex size-5 [&>svg]:size-full"
+                />
+              )}
+              {top.name}
+            </p>
+            <p class="text-caption-foreground mt-1 font-mono text-xs">
+              {topSharePct}% of this month's spend
+            </p>
+          </>
+        ) : (
+          <>
+            <p class="text-muted-foreground mt-2 text-lg font-semibold tracking-tight">—</p>
+            <p class="text-caption-foreground mt-1 font-mono text-xs">no usage yet this month</p>
+          </>
+        )
+      }
+    </div>
+  </div>
+</section>

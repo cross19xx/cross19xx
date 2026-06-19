@@ -1,9 +1,13 @@
 ---
+import MonthlyUsageStats from '_/components/MonthlyUsageStats.astro';
 import PageIntro from '_/components/PageIntro.astro';
+import ProviderIcon from '_/components/ProviderIcon.astro';
 import TokenUsageHeatmap from '_/components/TokenUsageHeatmap.astro';
 import BaseLayout from '_/layouts/Base.astro';
 import type { UsageData } from '_/types/usage';
 import { blobUrl } from '_/utils/misc';
+import { PROVIDER_LABELS } from '_/utils/models';
+import { computeMonthlyStats, deriveToolsTracked, formatAgentName } from '_/utils/usage-stats';
 
 import dayjs from 'dayjs';
 
@@ -45,12 +49,17 @@ const description =
 const lastRead: string | null = usage.totals?.lastRead
   ? dayjs(usage.totals.lastRead).format('ddd MMM D, YYYY, hh:mm A')
   : null;
+
+const monthlyStats = computeMonthlyStats(usage.daily, new Date());
+const toolsTracked = deriveToolsTracked(usage.daily);
 ---
 
 <BaseLayout title="Token Usage" description="A heatmap of my token usage">
   <PageIntro title="Token Usage" description={description} eyebrow="01 / AI" />
 
-  <div class="border-border/50 min-h-[calc(100dvh-32.5rem)] border-t">
+  <MonthlyUsageStats stats={monthlyStats} />
+
+  <div>
     <div class="mx-auto max-w-5xl p-6 lg:p-8">
       <div class="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between lg:mb-8">
         <h2 class="text-caption-foreground font-semibold">Token Usage</h2>
@@ -63,4 +72,65 @@ const lastRead: string | null = usage.totals?.lastRead
       <TokenUsageHeatmap usage={usage} />
     </div>
   </div>
+
+  <section class="border-border/50 border-t">
+    <div class="mx-auto grid max-w-5xl gap-8 p-6 lg:grid-cols-2 lg:gap-16 lg:p-8">
+      <div>
+        <h2 class="text-caption-foreground text-sm font-semibold tracking-wide uppercase">
+          How this works
+        </h2>
+        <p class="text-muted-foreground mt-3 text-sm text-pretty">
+          These numbers are real. A <a
+            href="https://developer.apple.com/documentation/xpc/launchd"
+            class="inline-link"
+            target="_blank"
+            rel="noopener noreferrer"><code>launchd</code></a
+          > job on my Mac runs <a
+            href="https://github.com/ryoppippi/ccusage"
+            class="inline-link"
+            target="_blank"
+            rel="noopener noreferrer">ccusage</a
+          > on a schedule, bundles every session across the AI CLIs I use, and uploads a snapshot to blob
+          storage that this page reads.
+        </p>
+
+        <p class="text-muted-foreground mt-3 text-sm text-pretty">
+          This feature is heavily inspired (an understatement) by <a
+            href="https://ephraimduncan.com/token-usage"
+            class="inline-link"
+            target="_blank"
+            rel="noopener noreferrer">Ephraim Duncan&apos;s token usage page</a
+          >.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-caption-foreground text-sm font-semibold tracking-wide uppercase">
+          Tools &amp; models tracked
+        </h2>
+        {
+          toolsTracked.providers.length > 0 && (
+            <ul class="mt-3 flex flex-wrap gap-2">
+              {toolsTracked.providers.map((provider) => (
+                <li class="border-border/50 text-caption-foreground inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs">
+                  <ProviderIcon
+                    provider={provider}
+                    class="inline-flex size-3.5 [&>svg]:size-full"
+                  />
+                  {PROVIDER_LABELS[provider]}
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        {
+          toolsTracked.agents.length > 0 && (
+            <p class="text-caption-foreground mt-3 font-mono text-xs">
+              via {toolsTracked.agents.map((agent) => formatAgentName(agent)).join(', ')}
+            </p>
+          )
+        }
+      </div>
+    </div>
+  </section>
 </BaseLayout>

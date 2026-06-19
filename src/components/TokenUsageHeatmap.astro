@@ -179,6 +179,7 @@ for (const day of calendarDays) {
 
   <script>
     import { createHeatmapSounds } from '_/utils/heatmap-audio';
+    import { getModelDetails } from '_/utils/models';
 
     interface ModelBreakdown {
       cacheCreationTokens: number;
@@ -198,8 +199,6 @@ for (const day of calendarDays) {
       openai: string;
     }
 
-    type ModelProvider = keyof ProviderIcons;
-
     interface DailyUsage {
       agent: string;
       cacheCreationTokens: number;
@@ -216,55 +215,7 @@ for (const day of calendarDays) {
       totalTokens: number;
     }
 
-    const getModelDetails = (name: string): { name: string; icon: ModelProvider | null } => {
-      const modelDetails: Record<string, { name: string; icon: ModelProvider }> = {
-        'claude-opus-4-8': { name: 'Opus 4.8', icon: 'anthropic' },
-        'claude-opus-4-7': { name: 'Opus 4.7', icon: 'anthropic' },
-        'claude-opus-4-6': { name: 'Opus 4.6', icon: 'anthropic' },
-        'claude-opus-4-5': { name: 'Opus 4.5', icon: 'anthropic' },
-        'claude-sonnet-4-6': { name: 'Sonnet 4.6', icon: 'anthropic' },
-        'claude-sonnet-4-5': { name: 'Sonnet 4.5', icon: 'anthropic' },
-        'claude-haiku-4-5': { name: 'Haiku 4.5', icon: 'anthropic' },
-        'claude-haiku-4-5-20251001': { name: 'Haiku 4.5', icon: 'anthropic' },
-        'claude-3.5-haiku': { name: 'Haiku 3.5', icon: 'anthropic' },
-        'gpt-5.5': { name: 'GPT-5.5', icon: 'openai' },
-        'gpt-5.4': { name: 'GPT-5.4', icon: 'openai' },
-        'gpt-5.3-codex': { name: 'GPT-5.3 Codex', icon: 'openai' },
-        'gpt-5.3-codex-spark': { name: 'GPT-5.3 Codex Spark', icon: 'openai' },
-        'gpt-5.2': { name: 'GPT-5.2', icon: 'openai' },
-        'gpt-5.2-codex': { name: 'GPT-5.2 Codex', icon: 'openai' },
-        'gpt-5.1-codex': { name: 'GPT-5.1 Codex', icon: 'openai' },
-        'gpt-5.1-codex-max': { name: 'GPT-5.1 Codex Max', icon: 'openai' },
-        'gpt-5-codex': { name: 'GPT-5 Codex', icon: 'openai' },
-        'gemini-3-flash-preview': { name: 'Gemini 3 Flash', icon: 'gemini' },
-        'gemini-3-pro-preview': { name: 'Gemini 3 Pro', icon: 'gemini' },
-        'gemini-3.1-pro-preview-customtools': { name: 'Gemini 3.1 Pro', icon: 'gemini' },
-        'antigravity-gemini-3.1-pro': { name: 'Antigravity Gemini 3.1 Pro', icon: 'antigravity' },
-        'claude-fable-5': { name: 'Claude Fable 5', icon: 'anthropic' },
-        'glm-4.7': { name: 'GLM 4.7', icon: 'glm' },
-        'glm-4.7-free': { name: 'GLM 4.7', icon: 'glm' },
-        'kimi-k2.5-free': { name: 'Kimi K2.5', icon: 'kimi' },
-      };
-
-      return modelDetails[name] ?? { name: formatFallbackModelName(name), icon: null };
-    };
-
     const sounds = createHeatmapSounds();
-
-    function formatFallbackModelName(modelName: string) {
-      return modelName
-        .replace(/(\d)-(\d)/g, '$1.$2')
-        .replace(/-\d{8}$/, '')
-        .split('-')
-        .map((part) => {
-          if (part === 'gpt' || part === 'glm') return part.toUpperCase();
-          if (part === 'claude') return 'Claude';
-          if (part === 'gemini') return 'Gemini';
-          if (part === 'kimi') return 'Kimi';
-          return part.charAt(0).toUpperCase() + part.slice(1);
-        })
-        .join(' ');
-    }
 
     function formatCost(cost: number) {
       return `$${Number(cost).toFixed(2)}`;
@@ -327,15 +278,15 @@ for (const day of calendarDays) {
       const models = [...day.modelBreakdowns].sort((a, b) => b.cost - a.cost);
 
       for (const model of models) {
-        const { name: modelName, icon: modelIcon } = getModelDetails(model.modelName);
+        const { name: modelName, provider } = getModelDetails(model.modelName);
 
         const row = document.createElement('div');
         row.className = 'usage-heatmap__tooltip-model-row';
 
         const iconContainer = document.createElement('span');
         iconContainer.className = 'usage-heatmap__tooltip-model-icon';
-        if (modelIcon) {
-          const iconSvg = icons[modelIcon];
+        if (provider) {
+          const iconSvg = icons[provider];
           iconContainer.innerHTML = iconSvg;
         }
 
