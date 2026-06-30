@@ -317,6 +317,12 @@ for (const day of calendarDays) {
       const json = root.querySelector<HTMLScriptElement>('[data-usage-json]');
       const data = JSON.parse(json?.textContent ?? '[]') as DailyUsage[];
 
+      const scroller = root.querySelector<HTMLElement>('.usage-heatmap__scroller');
+
+      if (scroller && window.matchMedia('(max-width: 640px)').matches) {
+        scroller.scrollLeft = scroller.scrollWidth;
+      }
+
       const tooltip = root.querySelector<HTMLElement>('[data-tooltip]');
       const tooltipDate = root.querySelector<HTMLElement>('[data-tooltip-date]');
       const tooltipCost = root.querySelector<HTMLElement>('[data-tooltip-cost]');

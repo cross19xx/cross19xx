@@ -25,6 +25,7 @@ export const MODEL_DETAILS: Record<string, ModelDetail> = {
   'claude-haiku-4-5-20251001': { name: 'Haiku 4.5', provider: 'anthropic' },
   'claude-3.5-haiku': { name: 'Haiku 3.5', provider: 'anthropic' },
   'gpt-5.5': { name: 'GPT-5.5', provider: 'openai' },
+  'gpt-5.4-mini': { name: 'GPT-5.4 Mini', provider: 'openai' },
   'gpt-5.4': { name: 'GPT-5.4', provider: 'openai' },
   'gpt-5.3-codex': { name: 'GPT-5.3 Codex', provider: 'openai' },
   'gpt-5.3-codex-spark': { name: 'GPT-5.3 Codex Spark', provider: 'openai' },
@@ -33,6 +34,7 @@ export const MODEL_DETAILS: Record<string, ModelDetail> = {
   'gpt-5.1-codex': { name: 'GPT-5.1 Codex', provider: 'openai' },
   'gpt-5.1-codex-max': { name: 'GPT-5.1 Codex Max', provider: 'openai' },
   'gpt-5-codex': { name: 'GPT-5 Codex', provider: 'openai' },
+  'codex-auto-review': { name: 'Codex Auto Review', provider: 'openai' },
   'gemini-3-flash-preview': { name: 'Gemini 3 Flash', provider: 'gemini' },
   'gemini-3-pro-preview': { name: 'Gemini 3 Pro', provider: 'gemini' },
   'gemini-3.1-pro-preview-customtools': { name: 'Gemini 3.1 Pro', provider: 'gemini' },
@@ -41,6 +43,7 @@ export const MODEL_DETAILS: Record<string, ModelDetail> = {
   'glm-4.7': { name: 'GLM 4.7', provider: 'glm' },
   'glm-4.7-free': { name: 'GLM 4.7', provider: 'glm' },
   'kimi-k2.5-free': { name: 'Kimi K2.5', provider: 'kimi' },
+  web_search: { name: 'Codex Web Search', provider: 'openai' },
 };
 
 export function formatFallbackModelName(modelName: string): string {
